@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  cafe-management-system-db:
+    image: cafe-management-system-db
+    ports:
+      - "33061:3306"
+    networks:
+      - cafe-management-system-network
+  cafe-management-system-be:
+    image: cafe-management-system-be
+    ports:
+      - "8081:8081"
+    networks:
+      - cafe-management-system-network
+
+networks:
+  cafe-management-system-network:
