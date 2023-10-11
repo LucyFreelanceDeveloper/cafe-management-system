@@ -5,6 +5,8 @@ services:
     image: cafe-management-system-db
     ports:
       - "33061:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
     networks:
       - cafe-management-system-network
   cafe-management-system-be:
