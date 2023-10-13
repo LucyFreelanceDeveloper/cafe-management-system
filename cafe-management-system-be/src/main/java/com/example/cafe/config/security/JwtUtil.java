@@ -1,4 +1,4 @@
-package com.example.cafe.jwt;
+package com.example.cafe.config.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -13,7 +13,7 @@ import java.util.function.Function;
 
 @Service
 public class JwtUtil {
-    private String secret = "btechday";
+    private String secret = "myKey";
 
     public String extractUsername(String token){
         return extractClaims(token, Claims::getSubject);
