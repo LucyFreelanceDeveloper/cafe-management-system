@@ -16,6 +16,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class CustomerUserDetailsService implements UserDetailsService {
+
     private final UserRepository userRepository;
 
     private UserEntity userEntity;
@@ -26,16 +27,19 @@ public class CustomerUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("Inside loadUserByUsername: {}", username);
         Optional<UserEntity> userEntityWrapper = userRepository.findByEmail(username);
-        if(userEntityWrapper.isPresent()) {
+        if (userEntityWrapper.isPresent()) {
             userEntity = userEntityWrapper.get();
             return new User(userEntity.getEmail(), userEntity.getPassword(), new ArrayList<>());
-        }else {throw new UsernameNotFoundException("User not found");}
+        } else {
+            throw new UsernameNotFoundException("User not found.");
+        }
     }
 
-    public UserEntity getUserEntity(){
+    public UserEntity getUserEntity() {
         return userEntity;
     }
 }
+
