@@ -29,29 +29,50 @@ public class ProductController {
 
     @PostMapping
     ResponseEntity<String> create(@NotNull @Valid @RequestBody ProductDto productDto) {
-        try{
+        try {
             return productService.create(productDto);
-        } catch(Exception ex){
-            log.error("Failed call create: {}", ex);
+        } catch (Exception ex) {
+            log.error("Failed call create", ex);
             return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping
-    ResponseEntity<List<ProductDto>> findAll() {
+    ResponseEntity<List<ProductDto>> findAll(@RequestParam(required = false) Integer categoryId) {
         try {
-            return productService.findAll();
+            return categoryId == null ? productService.findAll() : productService.findByCategoryId(categoryId);
         } catch (Exception ex) {
-            log.error("Failed call findAll: {}", ex);
+            log.error("Failed call findAll", ex);
             return new ResponseEntity<>(new ArrayList<ProductDto>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    @GetMapping(path = "/{id}")
+    ResponseEntity<ProductDto> findById(@PathVariable Integer id) {
+        try {
+            return productService.findById(id);
+        } catch (Exception ex) {
+            log.error("Failed call findById", ex);
+            return new ResponseEntity<>(new ProductDto(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping
     ResponseEntity<String> update(@RequestBody ProductDto productDto) {
-        try{
+        try {
             return productService.update(productDto);
-        } catch (Exception ex){
-            log.error("Failed update: {}", ex);
+        } catch (Exception ex) {
+            log.error("Failed update", ex);
+            return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping
+    ResponseEntity<String> delete(@PathVariable Integer id) {
+        try {
+            return productService.delete(id);
+        } catch (Exception ex) {
+            log.error("Failed call delete", ex);
             return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

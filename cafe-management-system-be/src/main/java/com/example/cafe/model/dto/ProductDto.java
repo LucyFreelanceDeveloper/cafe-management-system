@@ -1,6 +1,5 @@
 package com.example.cafe.model.dto;
 
-import com.example.cafe.model.entity.CategoryEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,11 +13,14 @@ public class ProductDto {
 
     private String name;
 
-    private CategoryEntity category;
-
     private String description;
 
     private Integer price;
 
     private String status;
+
+    private Integer categoryId;
+
+    private String categoryName;
+
 }

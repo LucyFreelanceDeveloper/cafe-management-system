@@ -1,16 +1,21 @@
 package com.example.cafe.model.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serializable;
+import java.util.Set;
 
-@Data
 @Entity
 @DynamicUpdate
 @DynamicInsert
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
 @Table(name = "category")
 public class CategoryEntity implements Serializable {
 
@@ -23,5 +28,11 @@ public class CategoryEntity implements Serializable {
 
     @Column(name = "name")
     private String name;
+
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<ProductEntity> products;
 
 }
