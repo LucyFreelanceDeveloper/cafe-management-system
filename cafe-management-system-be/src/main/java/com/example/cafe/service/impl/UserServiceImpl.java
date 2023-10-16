@@ -11,6 +11,7 @@ import com.example.cafe.repository.UserRepository;
 import com.example.cafe.service.UserService;
 import com.example.cafe.util.CafeUtils;
 import com.example.cafe.util.EmailUtils;
+import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -156,6 +157,22 @@ public class UserServiceImpl implements UserService {
                     return CafeUtils.getResponseEntity("Password update successfully", HttpStatus.OK);
                 }
                 return CafeUtils.getResponseEntity("Incorrect old password", HttpStatus.BAD_REQUEST);
+            }
+            return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception ex) {
+            log.error("Failed call changePassword", ex);
+            return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public ResponseEntity<String> forgotPassword(Map<String, String> requestMap) {
+        try {
+            Optional<UserEntity> userWrapper = userRepository.findByEmail(requestMap.get("email"));
+            if (userWrapper.isPresent() && !Strings.isNullOrEmpty(userWrapper.get().getEmail())) {
+                UserEntity user = userWrapper.get();
+                emailUtils.forgotMail(user.getEmail(), "Credentials by Cafe Management System", user.getPassword());
+                return CafeUtils.getResponseEntity("Check your mail for credentials", HttpStatus.OK);
             }
             return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception ex) {
