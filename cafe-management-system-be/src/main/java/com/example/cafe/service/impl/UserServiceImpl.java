@@ -96,7 +96,7 @@ public class UserServiceImpl implements UserService {
 
 
         } catch (Exception ex) {
-            log.error("{}", ex);
+            log.error("%s", ex);
         }
 
         return new ResponseEntity<String>("\"message\":\"Bad Credentials.\"", HttpStatus.BAD_REQUEST);
@@ -122,7 +122,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<String> update(Map<String, String> requestMap) {
         try {
-            if (jwtFilter.isUser()) {
+            if (jwtFilter.isAdmin()) {
                 Optional<UserEntity> userEntityWrapper = userRepository.findById(Integer.parseInt(requestMap.get("id")));
                 if (userEntityWrapper.isPresent()) {
                     userRepository.updateStatus(requestMap.get("status"), Integer.parseInt(requestMap.get("id")));
@@ -195,7 +195,6 @@ public class UserServiceImpl implements UserService {
                     allAdmin.stream().map(a -> a.getEmail()).collect(Collectors.toList()));
         }
     }
-
 
     private boolean validateSignUpMap(Map<String, String> requestMap) {
         return requestMap.containsKey("name")

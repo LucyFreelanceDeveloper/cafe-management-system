@@ -32,7 +32,7 @@ public class CategoryController {
         try {
             return categoryService.create(categoryDto);
         } catch (Exception ex) {
-            log.error("Failed call create: {}", ex);
+            log.error("Failed call create: %s", ex);
             return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -42,8 +42,8 @@ public class CategoryController {
         try {
             return categoryService.findAll();
         } catch (Exception ex) {
-            log.error("Failed call findAll: {}", ex);
-            return new ResponseEntity<>(new ArrayList<CategoryDto>(), HttpStatus.INTERNAL_SERVER_ERROR);
+            log.error("Failed call findAll: %s", ex);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -52,7 +52,7 @@ public class CategoryController {
         try {
             return categoryService.update(categoryDto);
         } catch (Exception ex) {
-            log.error("Failed call update: {}", ex);
+            log.error("Failed call update: %s", ex);
             return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

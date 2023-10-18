@@ -16,6 +16,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @EqualsAndHashCode
+@ToString
 @Table(name = "product")
 public class ProductEntity implements Serializable {
 
@@ -31,7 +32,9 @@ public class ProductEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
-    @EqualsAndHashCode.Exclude @ToString.Exclude private CategoryEntity category;
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private CategoryEntity category;
 
     @Column(name = "description")
     private String description;
@@ -41,5 +44,4 @@ public class ProductEntity implements Serializable {
 
     @Column(name = "status")
     private String status;
-
 }

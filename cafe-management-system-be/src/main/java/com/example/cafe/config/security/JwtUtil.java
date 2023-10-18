@@ -13,7 +13,8 @@ import java.util.function.Function;
 
 @Service
 public class JwtUtil {
-    private String secret = "myKey";
+
+    private final String secret = "myKey";
 
     public String extractUsername(String token) {
         return extractClaims(token, Claims::getSubject);
@@ -49,7 +50,6 @@ public class JwtUtil {
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
                 .signWith(SignatureAlgorithm.HS256, secret).compact();
-
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {

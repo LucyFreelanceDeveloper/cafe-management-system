@@ -16,6 +16,7 @@ import java.util.Set;
 @Getter
 @Setter
 @EqualsAndHashCode
+@ToString
 @Table(name = "category")
 public class CategoryEntity implements Serializable {
 
@@ -34,5 +35,4 @@ public class CategoryEntity implements Serializable {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<ProductEntity> products;
-
 }

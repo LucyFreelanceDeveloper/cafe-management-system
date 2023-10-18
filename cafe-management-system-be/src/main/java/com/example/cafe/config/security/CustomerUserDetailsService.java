@@ -2,6 +2,7 @@ package com.example.cafe.config.security;
 
 import com.example.cafe.model.entity.UserEntity;
 import com.example.cafe.repository.UserRepository;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -16,9 +17,9 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class CustomerUserDetailsService implements UserDetailsService {
-
     private final UserRepository userRepository;
 
+    @Getter
     private UserEntity userEntity;
 
     @Autowired
@@ -37,9 +38,4 @@ public class CustomerUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found.");
         }
     }
-
-    public UserEntity getUserEntity() {
-        return userEntity;
-    }
 }
-

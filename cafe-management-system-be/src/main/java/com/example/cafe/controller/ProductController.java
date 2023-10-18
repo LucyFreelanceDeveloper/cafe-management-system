@@ -32,7 +32,7 @@ public class ProductController {
         try {
             return productService.create(productDto);
         } catch (Exception ex) {
-            log.error("Failed call create", ex);
+            log.error("Failed call create: %s", ex);
             return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -42,7 +42,7 @@ public class ProductController {
         try {
             return categoryId == null ? productService.findAll() : productService.findByCategoryId(categoryId);
         } catch (Exception ex) {
-            log.error("Failed call findAll", ex);
+            log.error("Failed call findAll: %s", ex);
             return new ResponseEntity<>(new ArrayList<ProductDto>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -52,7 +52,7 @@ public class ProductController {
         try {
             return productService.findById(id);
         } catch (Exception ex) {
-            log.error("Failed call findById", ex);
+            log.error("Failed call findById: %s", ex);
             return new ResponseEntity<>(new ProductDto(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -62,7 +62,7 @@ public class ProductController {
         try {
             return productService.update(productDto);
         } catch (Exception ex) {
-            log.error("Failed update", ex);
+            log.error("Failed update: %s", ex);
             return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -72,9 +72,8 @@ public class ProductController {
         try {
             return productService.delete(id);
         } catch (Exception ex) {
-            log.error("Failed call delete", ex);
+            log.error("Failed call delete: %s", ex);
             return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 }

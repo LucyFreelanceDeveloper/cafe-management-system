@@ -38,7 +38,6 @@ public class ProductServiceImpl implements ProductService {
         this.jwtFilter = jwtFilter;
     }
 
-
     @Override
     public ResponseEntity<String> create(ProductDto productDto) {
         try {
@@ -100,13 +99,13 @@ public class ProductServiceImpl implements ProductService {
         try {
             Optional<CategoryEntity> categoryEntityWrapper = categoryRepository.findById(categoryId);
 
-            if(categoryEntityWrapper.isPresent()){
+            if (categoryEntityWrapper.isPresent()) {
                 List<ProductDto> products = categoryEntityWrapper.get().getProducts()
                         .stream()
                         .map(product -> ProductMapper.INSTANCE.productEntityToProductDto(product))
                         .collect(Collectors.toList());
                 return new ResponseEntity<>(products, HttpStatus.OK);
-            } else{
+            } else {
                 return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             }
         } catch (Exception ex) {
@@ -123,23 +122,23 @@ public class ProductServiceImpl implements ProductService {
                 if (productEntityWrapper.isPresent()) {
                     ProductEntity productEntity = productEntityWrapper.get();
 
-                    if(productDto.getName()!=null){
+                    if (productDto.getName() != null) {
                         productEntity.setName(productDto.getName());
                     }
-                    if(productDto.getDescription()!=null){
+                    if (productDto.getDescription() != null) {
                         productEntity.setDescription(productDto.getDescription());
                     }
-                    if(productDto.getPrice()!=null){
+                    if (productDto.getPrice() != null) {
                         productEntity.setPrice(productDto.getPrice());
                     }
-                    if(productDto.getStatus()!=null){
+                    if (productDto.getStatus() != null) {
                         productEntity.setStatus(productDto.getStatus());
                     }
 
-                    if(productDto.getCategoryId() != null){
+                    if (productDto.getCategoryId() != null) {
                         Optional<CategoryEntity> categoryEntityWrapper = categoryRepository.findById(productDto.getCategoryId());
 
-                        if(categoryEntityWrapper.isEmpty()){
+                        if (categoryEntityWrapper.isEmpty()) {
                             return CafeUtils.getResponseEntity(String.format("Category %s not fond", productDto.getCategoryId()), HttpStatus.NOT_FOUND);
                         }
 

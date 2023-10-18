@@ -1,16 +1,21 @@
 package com.example.cafe.model.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serializable;
 
-@Data
 @Entity
 @DynamicUpdate //TODO: what is it?
 @DynamicInsert //TODO: what is it?
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
 @Table(name = "user")
 public class UserEntity implements Serializable {
 
@@ -38,5 +43,4 @@ public class UserEntity implements Serializable {
 
     @Column(name = "role")
     private String role;
-
 }
