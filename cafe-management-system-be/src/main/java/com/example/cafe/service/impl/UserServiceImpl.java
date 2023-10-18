@@ -96,11 +96,10 @@ public class UserServiceImpl implements UserService {
 
 
         } catch (Exception ex) {
-            log.error("%s", ex);
+            log.error("{}", ex);
         }
 
         return new ResponseEntity<String>("\"message\":\"Bad Credentials.\"", HttpStatus.BAD_REQUEST);
-
     }
 
     @Override

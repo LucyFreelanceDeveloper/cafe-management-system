@@ -8,8 +8,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import java.io.Serializable;
 
 @Entity
-@DynamicUpdate //TODO: what is it?
-@DynamicInsert //TODO: what is it?
+@DynamicUpdate
+@DynamicInsert
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -19,7 +19,7 @@ import java.io.Serializable;
 @Table(name = "user")
 public class UserEntity implements Serializable {
 
-    private static final long serialVersionUID = 1L; //TODO: what is it?
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

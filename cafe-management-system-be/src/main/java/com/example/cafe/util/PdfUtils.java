@@ -17,11 +17,9 @@ import java.util.stream.Stream;
 
 public class PdfUtils {
 
-    public static final String STORE_LOCATION = "";
-
-    public static void generateAndSaveBillReport(BillDto billDto) throws FileNotFoundException, DocumentException, JsonProcessingException {
+    public static void generateAndSaveBillReport(BillDto billDto, String storeLocation) throws FileNotFoundException, DocumentException, JsonProcessingException {
         Document document = new Document();
-        PdfWriter.getInstance(document, new FileOutputStream(STORE_LOCATION + billDto.getUuid() + ".pdf"));
+        PdfWriter.getInstance(document, new FileOutputStream(storeLocation + billDto.getUuid() + ".pdf"));
 
         document.open();
         document.add(createRectangle());
@@ -66,7 +64,7 @@ public class PdfUtils {
 
     private static Paragraph createDataSection(BillDto billDto) {
         final String data = String.format(
-                "Name: {} \n Contact Number: {} \n Email: {} \n Payment Method: {} \n ",
+                "Name: %s \nContact Number: %s \nEmail: %s \nPayment Method: %s \n",
                 billDto.getName(), billDto.getContactNumber(), billDto.getEmail(), billDto.getPaymentMethod());
         return new Paragraph(data + "\n \n", getFont("Data"));
     }
@@ -105,7 +103,7 @@ public class PdfUtils {
 
     private static Paragraph createFooter(BillDto billDto) {
         return new Paragraph(
-                String.format("Total : %s \n Thank you for visiting. Please visit again!!", billDto.getTotal()),
+                String.format("Total : %s \nThank you for visiting. Please visit again!!", billDto.getTotal()),
                 getFont("Data"));
     }
 }

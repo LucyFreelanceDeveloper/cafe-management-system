@@ -10,9 +10,18 @@ import com.example.cafe.service.BillService;
 import com.example.cafe.util.CafeUtils;
 import com.example.cafe.util.PdfUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -21,6 +30,8 @@ public class BillServiceImpl implements BillService {
     private final BillRepository billRepository;
 
     private final JwtFilter jwtFilter;
+
+    public static final String PDF_STORE_LOCATION = "";
 
     public BillServiceImpl(BillRepository billRepository, JwtFilter jwtFilter) {
         this.billRepository = billRepository;
@@ -34,11 +45,73 @@ public class BillServiceImpl implements BillService {
             billDto.setCreatedBy(jwtFilter.getCurrentUser());
             BillEntity billEntity = BillMapper.INSTANCE.billDtoToBillEntity(billDto);
             billRepository.save(billEntity);
-            PdfUtils.generateAndSaveBillReport(billDto);
+            PdfUtils.generateAndSaveBillReport(billDto, PDF_STORE_LOCATION);
             return CafeUtils.getResponseEntity(String.format("Successfully create bill - [uuid:%s]", billEntity.getUuid()), HttpStatus.CREATED);
         } catch (Exception ex) {
             log.error("Failed call generateReport", ex);
             return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public ResponseEntity<List<BillDto>> findAll() {
+        try {
+            if (jwtFilter.isAdmin()) {
+                List<BillDto> bills = billRepository.findAll()
+                        .stream()
+                        .map(bill -> BillMapper.INSTANCE.billEntityToBillDto(bill))
+                        .collect(Collectors.toList());
+                return new ResponseEntity<>(bills, HttpStatus.OK);
+            } else {
+                List<BillDto> bills = billRepository.findByCreatedBy(jwtFilter.getCurrentUser())
+                        .stream()
+                        .map(bill -> BillMapper.INSTANCE.billEntityToBillDto(bill))
+                        .collect(Collectors.toList());
+                return new ResponseEntity<>(bills, HttpStatus.OK);
+            }
+
+        } catch (Exception ex) {
+            log.error("Failed call findAll", ex);
+            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public ResponseEntity<String> delete(Integer id) {
+        try {
+            if (billRepository.existsById(id)) {
+                BillDto billDto = BillMapper.INSTANCE.billEntityToBillDto(billRepository.findById(id).get());
+                new File(PDF_STORE_LOCATION + billDto.getUuid() + ".pdf").delete();
+                billRepository.deleteById(id);
+                return CafeUtils.getResponseEntity("Bill Delete Successfully", HttpStatus.OK);
+            } else {
+                return CafeUtils.getResponseEntity("Bill id does not exist", HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception ex) {
+            log.error("Failed call delete", ex);
+            return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public ResponseEntity<byte[]> findPdf(Integer id) {
+        try {
+            if (billRepository.existsById(id)) {
+                BillDto billDto = BillMapper.INSTANCE.billEntityToBillDto(billRepository.findById(id).get());
+                byte[] bytes = Files.readAllBytes(Paths.get(PDF_STORE_LOCATION + billDto.getUuid() + ".pdf"));
+
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_PDF);
+
+                return ResponseEntity.ok()
+                        .headers(headers)
+                        .body(bytes);
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception ex) {
+            log.error("Failed call findPdf", ex);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
