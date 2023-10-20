@@ -4,6 +4,7 @@ import com.example.cafe.constants.CafeConstants;
 import com.example.cafe.model.dto.ProductDto;
 import com.example.cafe.service.ProductService;
 import com.example.cafe.util.CafeUtils;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ public class ProductController {
     }
 
     @PostMapping
+    @Operation(summary = "Create product")
     ResponseEntity<String> create(@NotNull @Valid @RequestBody ProductDto productDto) {
         try {
             return productService.create(productDto);
@@ -38,6 +40,7 @@ public class ProductController {
     }
 
     @GetMapping
+    @Operation(summary = "Get all products")
     ResponseEntity<List<ProductDto>> findAll(@RequestParam(required = false) Integer categoryId) {
         try {
             return categoryId == null ? productService.findAll() : productService.findByCategoryId(categoryId);
@@ -48,6 +51,7 @@ public class ProductController {
     }
 
     @GetMapping(path = "/{id}")
+    @Operation(summary = "Get product by id")
     ResponseEntity<ProductDto> findById(@PathVariable Integer id) {
         try {
             return productService.findById(id);
@@ -58,6 +62,7 @@ public class ProductController {
     }
 
     @PutMapping
+    @Operation(summary = "Update product")
     ResponseEntity<String> update(@RequestBody ProductDto productDto) {
         try {
             return productService.update(productDto);
@@ -68,6 +73,7 @@ public class ProductController {
     }
 
     @DeleteMapping(path = "/{id}")
+    @Operation(summary = "Delete product")
     ResponseEntity<String> delete(@PathVariable Integer id) {
         try {
             return productService.delete(id);

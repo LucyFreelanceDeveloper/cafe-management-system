@@ -49,7 +49,7 @@ public class SecurityConfig {
                 .and()
                 .csrf().disable()
                 .authorizeRequests()
-                .requestMatchers("/user/login", "/user/signup", "/user/forgotPassword")
+                .requestMatchers("/user/login", "/user/signup", "/user/forgotPassword", "swagger-ui/*", "v3/api-docs", "v3/api-docs/*")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

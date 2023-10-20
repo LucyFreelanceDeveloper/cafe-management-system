@@ -4,6 +4,7 @@ import com.example.cafe.constants.CafeConstants;
 import com.example.cafe.model.dto.CategoryDto;
 import com.example.cafe.service.CategoryService;
 import com.example.cafe.util.CafeUtils;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ public class CategoryController {
     }
 
     @PostMapping
+    @Operation(summary = "Create category")
     ResponseEntity<String> create(@NotNull @Valid @RequestBody CategoryDto categoryDto){
         try {
             return categoryService.create(categoryDto);
@@ -38,6 +40,7 @@ public class CategoryController {
     }
 
     @GetMapping
+    @Operation(summary = "Get all categories")
     ResponseEntity<List<CategoryDto>> findAll(){
         try {
             return categoryService.findAll();
@@ -48,6 +51,7 @@ public class CategoryController {
     }
 
     @PutMapping
+    @Operation(summary = "Update category")
     ResponseEntity<String> update(@RequestBody CategoryDto categoryDto){
         try {
             return categoryService.update(categoryDto);

@@ -4,6 +4,7 @@ import com.example.cafe.constants.CafeConstants;
 import com.example.cafe.model.dto.UserDto;
 import com.example.cafe.service.UserService;
 import com.example.cafe.util.CafeUtils;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,7 @@ public class UserController {
 
 
     @PostMapping(path = "/signup")
+    @Operation(summary = "Signup user")
     public ResponseEntity<String> signUp(@RequestBody(required = true) Map<String, String> requestMap) {
         try {
             return userService.signUp(requestMap);
@@ -38,6 +40,7 @@ public class UserController {
     }
 
     @PostMapping(path = "/login")
+    @Operation(summary = "Login user")
     public ResponseEntity<String> login(@RequestBody(required = true) Map<String, String> requestMap) {
         try {
             return userService.login(requestMap);
@@ -48,6 +51,7 @@ public class UserController {
     }
 
     @GetMapping("/get")
+    @Operation(summary = "Get all users")
     public ResponseEntity<List<UserDto>> getAllUsers() {
         try {
             return userService.getAllUsers();
@@ -58,6 +62,7 @@ public class UserController {
     }
 
     @PostMapping("/update")
+    @Operation(summary = "Update user")
     public ResponseEntity<String> update(@RequestBody(required = true) Map<String, String> requestMap) {
         try {
             return userService.update(requestMap);
@@ -68,6 +73,7 @@ public class UserController {
     }
 
     @GetMapping("/checkToken")
+    @Operation(summary = "Check user token")
     ResponseEntity<String> checkToken() {
         try {
             return userService.checkToken();
@@ -78,6 +84,7 @@ public class UserController {
     }
 
     @PostMapping("/changePassword")
+    @Operation(summary = "Change user password")
     ResponseEntity<String> changePassword(@RequestBody Map<String, String> requestMap) {
         try {
             return userService.changePassword(requestMap);
@@ -88,6 +95,7 @@ public class UserController {
     }
 
     @PostMapping("/forgotPassword")
+    @Operation(summary = "Forgot password")
     ResponseEntity<String> forgotPassword(@RequestBody Map<String, String> requestMap){
         try {
             return userService.forgotPassword(requestMap);

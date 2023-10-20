@@ -1,6 +1,7 @@
 package com.example.cafe.controller;
 
 import com.example.cafe.service.DashboardService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,7 @@ public class DashBoardController {
     }
 
     @GetMapping("/details")
+    @Operation(summary = "Get count products, categories and bills")
     ResponseEntity<Map<String, Object>> getCount() {
         return dashboardService.getCount();
     }

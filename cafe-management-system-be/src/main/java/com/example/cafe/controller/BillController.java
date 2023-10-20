@@ -4,6 +4,7 @@ import com.example.cafe.constants.CafeConstants;
 import com.example.cafe.model.dto.BillDto;
 import com.example.cafe.service.BillService;
 import com.example.cafe.util.CafeUtils;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ public class BillController {
     }
 
     @PostMapping
+    @Operation(summary = "Create new bill")
     ResponseEntity<String> create(@NotNull @Valid @RequestBody BillDto billDto) {
         try {
             return billService.generateReport(billDto);
@@ -38,6 +40,7 @@ public class BillController {
     }
 
     @GetMapping
+    @Operation(summary = "Get all bills")
     ResponseEntity<List<BillDto>> findAll() {
         try {
             return billService.findAll();
@@ -48,6 +51,7 @@ public class BillController {
     }
 
     @GetMapping(path = "/{id}/pdf")
+    @Operation(summary = "Get pdf report for given bill id")
     ResponseEntity<byte[]> findPdf(@PathVariable Integer id){
         try{
             return billService.findPdf(id);
@@ -58,6 +62,7 @@ public class BillController {
     }
 
     @DeleteMapping(path = "/{id}")
+    @Operation(summary = "Delete bill")
     ResponseEntity<String> delete(@PathVariable Integer id){
         try{
             return billService.delete(id);
