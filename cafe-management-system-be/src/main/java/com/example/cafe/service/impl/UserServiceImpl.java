@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
                 Optional<UserEntity> userWrapper = userRepository.findByEmail(requestMap.get("email"));
                 if (userWrapper.isEmpty()) {
                     userRepository.save(getUserFromMap(requestMap));
-                    return CafeUtils.getResponseEntity("Successful Registered.", HttpStatus.OK);
+                    return CafeUtils.getResponseEntity("Successfully Registered.", HttpStatus.OK);
                 } else {
                     return CafeUtils.getResponseEntity("Email already exists.", HttpStatus.BAD_REQUEST);
                 }
