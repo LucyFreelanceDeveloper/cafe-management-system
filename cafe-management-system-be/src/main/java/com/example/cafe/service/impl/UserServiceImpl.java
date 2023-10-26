@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
                 if (customerUserDetailsService.getUserEntity().getStatus().equalsIgnoreCase("true")) {
                     return new ResponseEntity<String>("{\"token\":\""
                             + jwtUtil.generateToken(customerUserDetailsService.getUserEntity().getEmail(),
-                            customerUserDetailsService.getUserEntity().getRole()) + "\"", HttpStatus.OK);
+                            customerUserDetailsService.getUserEntity().getRole()) + "\"}", HttpStatus.OK);
                 } else {
                     return new ResponseEntity<String>("\"message\":\"Wait for admin approval.\"", HttpStatus.BAD_REQUEST);
                 }
