@@ -14,6 +14,7 @@ export class CategoryComponent implements OnInit {
 
   onAddCategory = new EventEmitter();
   onEditCategory = new EventEmitter();
+  onDeleteCategory = new EventEmitter();
   categoryForm:any = "Add";
   dialogAction:any = "Add";
   action:any = "Add";
@@ -74,7 +75,7 @@ export class CategoryComponent implements OnInit {
     }
     this.categoryService.update(data).subscribe((response:any)=>{
       this.dialogRef.close();
-      this.onAddCategory.emit();
+      this.onEditCategory.emit();
       this.responseMessage = response.message;
       this.snackbarService.openSnackBar(this.responseMessage,"success");
     },(error)=>{
