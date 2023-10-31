@@ -60,4 +60,15 @@ public class CategoryController {
             return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @DeleteMapping(path = "/{id}")
+    @Operation(summary = "Delete category")
+    ResponseEntity<String> delete(@PathVariable Integer id) {
+        try {
+            return categoryService.delete(id);
+        } catch (Exception ex) {
+            log.error("Failed call delete: %s", ex);
+            return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
