@@ -6,7 +6,7 @@
 </mat-card>
 <hr>
 <mat-card>
-    <mat-form-field appearance="standart">
+    <mat-form-field appearance="standard">
         <mat-label>Filter</mat-label>
         <input matInput (keyup)="applyFilter($event)" #input>
     </mat-form-field>
@@ -14,7 +14,7 @@
 <hr>
 
 <div class="responsive_table">
-    <table mat-table [datasource]="dataSource" class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
         <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>Name</th>
             <td mat-cell *matCellDef="let element">{{element.name}}</td>
@@ -23,7 +23,7 @@
         <ng-container matColumnDef="edit">
             <th mat-header-cell *matHeaderCellDef>Action</th>
             <td mat-cell *matCellDef="let element" class="action-link">
-                <button mat-icon-button color="primary" matTooltip="Edit" (click)="handleEditAction()"></button>
+                <button mat-icon-button color="primary" matTooltip="Edit" (click)="handleEditAction(element)"></button>
             </td>
         </ng-container>
 

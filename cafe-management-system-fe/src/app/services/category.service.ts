@@ -26,7 +26,7 @@ export class CategoryService {
   }
 
   
-  getCategories(data:any){
+  getCategories(){
     return this.httpClient.get(this.url + "/categories")
   }
 }
