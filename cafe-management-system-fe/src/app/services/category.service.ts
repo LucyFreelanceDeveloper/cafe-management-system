@@ -9,24 +9,23 @@ export class CategoryService {
 
   url = environment.apiUrl;
 
-  constructor(private httpClient:HttpClient) { }
+  constructor(private httpClient: HttpClient) {
 
-  add(data:any){
-    return this.httpClient.post(this.url +
-      "/categories", data, {
-        headers: new HttpHeaders().set('Content-Type', "application/json")
-      })
   }
 
-  update(data:any){
-    return this.httpClient.put(this.url +
-      "/categories", data, {
-        headers: new HttpHeaders().set('Content-Type', "application/json")
-      })
+  add(data: any) {
+    return this.httpClient.post(this.url + "/categories", data, {
+      headers: new HttpHeaders().set("Content-Type", "application/json")
+    })
   }
 
-  
-  getCategories(){
-    return this.httpClient.get(this.url + "/categories")
+  update(data: any) {
+    return this.httpClient.put(this.url + "/categories", data, {
+      headers: new HttpHeaders().set("Content-Type", "application/json")
+    })
+  }
+
+  getCategories() {
+    return this.httpClient.get(this.url + "/categories");
   }
 }

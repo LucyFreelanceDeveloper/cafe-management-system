@@ -2,7 +2,9 @@
     <mat-toolbar-row fxLayout="row">
         <span>{{dialogData.action}} Category</span>
         <span class="spacer"></span>
-        <button class="mat-dialow-close" mat-icon-button mat-dialog-close><mat-icon></mat-icon></button>
+        <button class="mat-dialog-close" mat-icon-button mat-dialog-close>
+            <mat-icon>close</mat-icon>
+        </button>
     </mat-toolbar-row>
 </mat-toolbar>
 
@@ -24,9 +26,7 @@
 
 <mat-dialog-actions align="end">
     <button mat-raised-button color="primary" type="submit" (click)="handleSubmit()" [disabled]="!(categoryForm.valid && categoryForm.dirty)">
-        <mat-icon>save</mat-icon>{{action}}
+        <mat-icon>save</mat-icon> {{action}}
     </button>
-    <button mat-raised-button color="warn" mat-dialog-close>
-        <mat-icon>cancel</mat-icon> Close
-    </button>
+    <button mat-raised-button color="warn" mat-dialog-close><mat-icon>cancel</mat-icon>Close</button>
 </mat-dialog-actions>
