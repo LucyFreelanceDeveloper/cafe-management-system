@@ -18,7 +18,7 @@ export class BillService {
     })
   }
 
-  getPdf(id: any, data: any) {
+  getPdf(id: any) {
     return this.httpClient.get(this.url + "/bills/" + id + "/pdf");
   }
 

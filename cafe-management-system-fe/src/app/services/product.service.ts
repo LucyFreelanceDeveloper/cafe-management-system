@@ -28,18 +28,14 @@ export class ProductService {
   }
 
   getProductByCategory(id: any){
-    return this.httpClient.get(this.url + "/products?categoryId=" + id.toString(), {
-      headers: new HttpHeaders().set("Conent-Type", "application/json")
-    });
+    return this.httpClient.get(this.url + "/products?categoryId=" + id);
   }
 
   delete(id: any) {
-    return this.httpClient.delete(this.url + "/products/" + id, {
-      headers: new HttpHeaders().set("Conent-Type", "application/json")
-    });
+    return this.httpClient.delete(this.url + "/products/" + id);
   }
 
-  getById(id:any){
-    return this.httpClient.delete(this.url + "/products/" + id);
+  getById(id: number){
+    return this.httpClient.get(this.url + "/products/" + id);
   }
 }
