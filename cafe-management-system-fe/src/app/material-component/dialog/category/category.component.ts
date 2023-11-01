@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CategoryService } from 'src/app/services/category.service';
 import { SnackbarService } from 'src/app/services/snackbar.service';
@@ -14,8 +14,7 @@ export class CategoryComponent implements OnInit {
 
   onAddCategory = new EventEmitter();
   onEditCategory = new EventEmitter();
-  onDeleteCategory = new EventEmitter();
-  categoryForm:any = "Add";
+  categoryForm:any = FormGroup;
   dialogAction:any = "Add";
   action:any = "Add";
   responseMessage:any;
@@ -59,7 +58,7 @@ export class CategoryComponent implements OnInit {
       this.dialogRef.close();
       console.error(error);
       if(error.error?.message){
-        this.responseMessage = error.error?.message
+        this.responseMessage = error.error?.message;
       } else {
         this.responseMessage = GlobalConstants.genericError;
       }
