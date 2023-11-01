@@ -11,7 +11,8 @@ export interface Menu {
 const MENUITEMS = [
     { state: 'dashboard', name: 'Dashboard', type: 'link', icon: 'dashboard', role: '' },
     { state: 'category', name: 'Manage categories', type: 'link', icon: 'category', role: 'admin' },
-    { state: 'product', name: 'Manage products', type: 'link', icon: 'inventory_2', role: 'admin' }
+    { state: 'product', name: 'Manage products', type: 'link', icon: 'inventory_2', role: 'admin' },
+    { state: 'order', name: 'Manage orders', type: 'link', icon: 'shopping_cart', role: '' }
 ]
 
 @Injectable()

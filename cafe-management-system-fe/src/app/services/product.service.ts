@@ -27,9 +27,19 @@ export class ProductService {
     return this.httpClient.get(this.url + "/products");
   }
 
+  getProductByCategory(id: any){
+    return this.httpClient.get(this.url + "/products?categoryId=" + id.toString(), {
+      headers: new HttpHeaders().set("Conent-Type", "application/json")
+    });
+  }
+
   delete(id: any) {
     return this.httpClient.delete(this.url + "/products/" + id, {
       headers: new HttpHeaders().set("Conent-Type", "application/json")
     });
+  }
+
+  getById(id:any){
+    return this.httpClient.delete(this.url + "/products/" + id);
   }
 }

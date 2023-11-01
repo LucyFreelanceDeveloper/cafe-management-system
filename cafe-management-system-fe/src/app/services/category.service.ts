@@ -34,4 +34,8 @@ export class CategoryService {
       headers:new HttpHeaders().set("Conent-Type", "application/json")
     });
   }
+
+  getFilteredCategories(){
+    return this.httpClient.get(this.url + "/categories?filterValue=true")
+  }
 }

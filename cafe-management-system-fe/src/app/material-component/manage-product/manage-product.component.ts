@@ -18,7 +18,6 @@ export class ManageProductComponent implements OnInit {
 
   displayedColumns: string[] = ['name', 'categoryName', 'description', 'price', 'edit'];
   dataSource: any;
-  //lenght1:any;
   responseMessage: any;
 
   constructor(private productService: ProductService,
