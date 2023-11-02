@@ -8,21 +8,28 @@ import { environment } from 'src/environments/environment';
 })
 export class BillService {
 
-  url = environment.apiUrl;
+  private readonly billsUrl:string = environment.apiUrl + "/bills";
+  private readonly defaultHeaders:HttpHeaders = new HttpHeaders().set("Content-Type", "application/json");
 
   constructor(private httpClient: HttpClient) { }
 
   generateReport(data: any) {
-    return this.httpClient.post(this.url + "/bills", data, {
-      headers: new HttpHeaders().set("Content-Type", "application/json")
+    return this.httpClient.post(this.billsUrl, data, {
+      headers: this.defaultHeaders
     })
   }
 
-  getPdf(id: any) {
-    return this.httpClient.get(this.url + "/bills/" + id + "/pdf");
+  getPdf(id: number):Observable<Blob> {
+    return this.httpClient.get(this.billsUrl + "/" + id + "/pdf", {responseType:'blob'});
   }
 
-  getBills() {
-    return this.httpClient.get(this.url + "/bills")
+  getAll() {
+    return this.httpClient.get(this.billsUrl);
+  }
+
+  delete(id:number){
+    return this.httpClient.delete(this.billsUrl + "/" + id, {
+      headers: this.defaultHeaders
+    })
   }
 }

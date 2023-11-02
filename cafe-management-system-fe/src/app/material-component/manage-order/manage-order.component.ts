@@ -48,7 +48,7 @@ export class ManageOrderComponent implements OnInit {
   }
 
   getCategories() {
-    this.categoryService.getFilteredCategories().subscribe((response: any) => {
+    this.categoryService.getFiltered().subscribe((response: any) => {
       this.ngxService.stop();
       this.categories = response;
     }, (error: any) => {
@@ -64,7 +64,7 @@ export class ManageOrderComponent implements OnInit {
   }
 
   getByCategory(value: any) {
-    this.productService.getProductByCategory(value.id).subscribe((response: any) => {
+    this.productService.getByCategory(value.id).subscribe((response: any) => {
       this.products = response;
       this.manageOrderForm.controls['price'].setValue('');
       this.manageOrderForm.controls['quantity'].setValue('');
@@ -164,13 +164,13 @@ export class ManageOrderComponent implements OnInit {
       email: formData.email,
       contactNumber: formData.contactNumber,
       paymentMethod: formData.paymentMethod,
-      totalAmount: this.totalAmount.toString(),
-      productDetails: JSON.stringify(this.dataSource)
+      total: this.totalAmount.toString(),
+      productDetail: JSON.stringify(this.dataSource)
     }
 
     this.ngxService.start();
     this.billService.generateReport(data).subscribe((response: any) => {
-      this.downloadFile(response?.uuid);
+      this.downloadFile(response);
       this.manageOrderForm.reset();
       this.dataSource = [];
       this.totalAmount = 0;
@@ -185,15 +185,10 @@ export class ManageOrderComponent implements OnInit {
     })
   }
 
-  downloadFile(fileName:string){
-    var data = {
-      uuid:fileName
-    }
-
-    this.billService.getPdf(data).subscribe((response:any)=>{
-      saveAs(response, fileName + '.pdf');
+  downloadFile(id:number) {
+    this.billService.getPdf(id).subscribe((response: any) => {
+      saveAs(response, 'Bill_' + id + '.pdf');
       this.ngxService.stop();
     })
   }
-
 }
