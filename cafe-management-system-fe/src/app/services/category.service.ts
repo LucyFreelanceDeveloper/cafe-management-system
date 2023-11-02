@@ -7,35 +7,36 @@ import { environment } from 'src/environments/environment';
 })
 export class CategoryService {
 
-  url = environment.apiUrl;
+  private readonly categoriesUrl:string = environment.apiUrl + "/categories";
+  private readonly defaultHeaders:HttpHeaders = new HttpHeaders().set("Content-Type", "application/json");
 
   constructor(private httpClient: HttpClient) {
 
   }
 
   add(data: any) {
-    return this.httpClient.post(this.url + "/categories", data, {
-      headers: new HttpHeaders().set("Content-Type", "application/json")
+    return this.httpClient.post(this.categoriesUrl, data, {
+      headers: this.defaultHeaders
     })
   }
 
   update(data: any) {
-    return this.httpClient.put(this.url + "/categories", data, {
-      headers: new HttpHeaders().set("Content-Type", "application/json")
+    return this.httpClient.put(this.categoriesUrl, data, {
+      headers: this.defaultHeaders
     })
   }
 
-  getCategories() {
-    return this.httpClient.get(this.url + "/categories");
+  get() {
+    return this.httpClient.get(this.categoriesUrl);
   }
 
   delete(id: any) {
-    return this.httpClient.delete(this.url + "/categories/" + id, {
-      headers:new HttpHeaders().set("Conent-Type", "application/json")
+    return this.httpClient.delete(this.categoriesUrl + "/" +id, {
+      headers: this.defaultHeaders
     });
   }
 
-  getFilteredCategories(){
-    return this.httpClient.get(this.url + "/categories?filterValue=true")
+  getFiltered(){
+    return this.httpClient.get(this.categoriesUrl + "?filterValue=true")
   }
 }

@@ -46,7 +46,7 @@ export class ProductComponent implements OnInit {
   }
 
   getCategories() {
-    this.categoryService.getCategories().subscribe((response: any) => {
+    this.categoryService.get().subscribe((response: any) => {
       this.categories = response;
     }, (error) => {
       this.dialogRef.close();

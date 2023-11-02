@@ -32,7 +32,7 @@ export class ManageProductComponent implements OnInit {
   }
 
   tableData() {
-    this.productService.getProducts().subscribe((response: any) => {
+    this.productService.get().subscribe((response: any) => {
       this.ngxService.stop();
       this.dataSource = new MatTableDataSource(response);
     }, (error: any) => {
@@ -94,12 +94,12 @@ export class ManageProductComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmationComponent, dialogConfig);
     const sub = dialogRef.componentInstance.onEmitStatusChange.subscribe((response) => {
       this.ngxService.start();
-      this.deleteProduct(values.id);
+      this.delete(values.id);
       dialogRef.close();
     })
   }
 
-  deleteProduct(id: any) {
+  delete(id: any) {
     this.productService.delete(id).subscribe((response: any) => {
       this.ngxService.stop();
       this.tableData();

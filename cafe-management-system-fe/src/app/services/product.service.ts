@@ -7,35 +7,36 @@ import { environment } from 'src/environments/environment';
 })
 export class ProductService {
 
-  url = environment.apiUrl;
+  private readonly productsUrl: string = environment.apiUrl + "/products"
+  private readonly defaultHeaders = new HttpHeaders().set("Content-Type", "application/json");
 
   constructor(private httpClient: HttpClient) { }
 
   add(data: any) {
-    return this.httpClient.post(this.url + "/products", data, {
-      headers: new HttpHeaders().set("Content-Type", "application/json")
+    return this.httpClient.post(this.productsUrl, data, {
+      headers: this.defaultHeaders
     })
   }
 
   update(data: any) {
-    return this.httpClient.put(this.url + "/products", data, {
-      headers: new HttpHeaders().set("Content-Type", "application/json")
+    return this.httpClient.put(this.productsUrl, data, {
+      headers: this.defaultHeaders
     })
   }
 
-  getProducts() {
-    return this.httpClient.get(this.url + "/products");
+  get() {
+    return this.httpClient.get(this.productsUrl);
   }
 
-  getProductByCategory(id: any){
-    return this.httpClient.get(this.url + "/products?categoryId=" + id);
+  getByCategory(id: any){
+    return this.httpClient.get(this.productsUrl + "?categoryId=" + id);
   }
 
   delete(id: any) {
-    return this.httpClient.delete(this.url + "/products/" + id);
+    return this.httpClient.delete(this.productsUrl+ "/" + id);
   }
 
   getById(id: number){
-    return this.httpClient.get(this.url + "/products/" + id);
+    return this.httpClient.get(this.productsUrl + "/" + id);
   }
 }
