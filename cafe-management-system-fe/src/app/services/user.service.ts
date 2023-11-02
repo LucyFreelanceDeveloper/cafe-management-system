@@ -41,11 +41,11 @@ export class UserService {
   }
 
   getAll() {
-    return this.httpClient.get(this.userUrl);
+    return this.httpClient.get(this.userUrl + "/get");
   }
 
   update(data: any) {
-    return this.httpClient.post(this.userUrl, data, {
+    return this.httpClient.post(this.userUrl + "/update", data, {
       headers: this.defaultHeaders
     });
   }

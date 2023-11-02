@@ -74,6 +74,15 @@ export class ViewBillComponent implements OnInit {
     this.billService.getPdf(id).subscribe((response: any) => {
       saveAs(response, 'Bill_' + id + '.pdf');
       this.ngxService.stop();
+    },(error: any) => {
+      this.ngxService.stop();
+      console.log(error);
+      if (error.error?.message) {
+        this.responseMessage = error.error?.message
+      } else {
+        this.responseMessage = GlobalConstants.genericError;
+      }
+      this.snackbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
     })
   }
 
