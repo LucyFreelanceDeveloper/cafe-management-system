@@ -44,9 +44,9 @@ public class BillServiceImpl implements BillService {
             billDto.setUuid(CafeUtils.getUUID());
             billDto.setCreatedBy(jwtFilter.getCurrentUser());
             BillEntity billEntity = BillMapper.INSTANCE.billDtoToBillEntity(billDto);
-            billRepository.save(billEntity);
+            BillEntity billEntitySaved = billRepository.save(billEntity);
             PdfUtils.generateAndSaveBillReport(billDto, PDF_STORE_LOCATION);
-            return CafeUtils.getResponseEntity(String.format("Successfully create bill - [uuid:%s]", billEntity.getUuid()), HttpStatus.CREATED);
+            return new ResponseEntity<String>(billEntitySaved.getId().toString(), HttpStatus.CREATED);
         } catch (Exception ex) {
             log.error("Failed call generateReport", ex);
             return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
