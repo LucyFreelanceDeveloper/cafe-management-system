@@ -6,35 +6,47 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class UserService {
-    url = environment.apiUrl
 
-  constructor(private httpClient:HttpClient) { }
+  private readonly userUrl: string = environment.apiUrl + "/user"
+  private readonly defaultHeaders = new HttpHeaders().set("Content-Type", "application/json");
 
-  signup(data:any){
-    return this.httpClient.post(this.url + "/user/signup", data, {
-        headers:new HttpHeaders().set('Content-type', 'application/json')
+  constructor(private httpClient: HttpClient) { }
+
+  signup(data: any) {
+    return this.httpClient.post(this.userUrl + "/signup", data, {
+      headers: this.defaultHeaders
     })
   }
 
-  forgotPassword(data:any){
-    return this.httpClient.post(this.url + "/user/forgotPassword", data, {
-        headers:new HttpHeaders().set('Content-type', 'application/json')
+  forgotPassword(data: any) {
+    return this.httpClient.post(this.userUrl + "/forgotPassword", data, {
+      headers: this.defaultHeaders
     })
   }
 
-  login(data:any){
-    return this.httpClient.post(this.url + "/user/login", data, {
-        headers:new HttpHeaders().set('Content-type', 'application/json')
+  login(data: any) {
+    return this.httpClient.post(this.userUrl + "/login", data, {
+      headers: this.defaultHeaders
     })
   }
 
-  checkToken(){
-    return this.httpClient.get(this.url + "/user/checkToken");
+  checkToken() {
+    return this.httpClient.get(this.userUrl + "/checkToken");
   }
 
-  changePassword(data:any){
-    return this.httpClient.post(this.url + "/user/changePassword",
-    data,
-    { headers: new HttpHeaders().set("Content-Type", "application/json") });
+  changePassword(data: any) {
+    return this.httpClient.post(this.userUrl + "/changePassword", data, {
+      headers: this.defaultHeaders
+    });
+  }
+
+  getAll() {
+    return this.httpClient.get(this.userUrl);
+  }
+
+  update(data: any) {
+    return this.httpClient.post(this.userUrl, data, {
+      headers: this.defaultHeaders
+    });
   }
 }
