@@ -1,5 +1,6 @@
 package com.example.cafe.config.security;
 
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +26,7 @@ public class SecurityConfig {
     private final JwtFilter jwtFilter;
 
     @Autowired
-    public SecurityConfig(CustomerUserDetailsService customerUserDetailsService, JwtFilter jwtFilter) {
+    public SecurityConfig(@NotNull final CustomerUserDetailsService customerUserDetailsService, @NotNull final JwtFilter jwtFilter) {
         this.customerUserDetailsService = customerUserDetailsService;
         this.jwtFilter = jwtFilter;
     }
@@ -36,7 +37,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder passwordEncoder)
+    public AuthenticationManager authenticationManager(final HttpSecurity http, final PasswordEncoder passwordEncoder)
             throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
                 .userDetailsService(customerUserDetailsService)
@@ -46,16 +47,17 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
         http.cors().configurationSource(request -> {
-                final CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
-                corsConfiguration.setAllowedMethods(List.of("HEAD","GET","POST","PUT","DELETE","PATCH","OPTIONS"));
-                return corsConfiguration;
-            })
+                    final CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
+                    corsConfiguration.setAllowedMethods(List.of("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+                    return corsConfiguration;
+                })
                 .and()
                 .csrf().disable()
                 .authorizeRequests()
-                .requestMatchers("/user/login", "/user/signup", "/user/forgotPassword", "swagger-ui/*", "v3/api-docs", "v3/api-docs/*")
+                .requestMatchers("/user/login", "/user/signup", "/user/forgotPassword",
+                        "swagger-ui/*", "v3/api-docs", "v3/api-docs/*")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

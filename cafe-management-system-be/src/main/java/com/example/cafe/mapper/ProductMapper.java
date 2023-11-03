@@ -10,7 +10,7 @@ import org.mapstruct.factory.Mappers;
 public interface ProductMapper {
     ProductMapper INSTANCE = Mappers.getMapper(ProductMapper.class);
 
-    @Mapping(source = "category.id", target= "categoryId")
+    @Mapping(source = "category.id", target = "categoryId")
     @Mapping(source = "category.name", target = "categoryName")
     ProductDto productEntityToProductDto(ProductEntity productEntity);
 

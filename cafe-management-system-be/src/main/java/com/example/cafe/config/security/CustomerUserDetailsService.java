@@ -2,6 +2,7 @@ package com.example.cafe.config.security;
 
 import com.example.cafe.model.entity.UserEntity;
 import com.example.cafe.repository.UserRepository;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +24,12 @@ public class CustomerUserDetailsService implements UserDetailsService {
     private UserEntity userEntity;
 
     @Autowired
-    public CustomerUserDetailsService(UserRepository userRepository) {
+    public CustomerUserDetailsService(@NotNull final UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(@NotNull final String username) throws UsernameNotFoundException {
         log.info("Inside loadUserByUsername: {}", username);
         Optional<UserEntity> userEntityWrapper = userRepository.findByEmail(username);
         if (userEntityWrapper.isPresent()) {

@@ -11,7 +11,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,13 +30,13 @@ public class BillController {
     private final BillService billService;
 
     @Autowired
-    public BillController(BillService billService) {
+    public BillController(@NotNull final BillService billService) {
         this.billService = billService;
     }
 
     @PostMapping
     @Operation(summary = "Create new bill")
-    ResponseEntity<String> create(@NotNull @Valid @RequestBody BillDto billDto) {
+    ResponseEntity<String> create(@NotNull @Valid @RequestBody final BillDto billDto) {
         try {
             return billService.generateReport(billDto);
         } catch (Exception ex) {
@@ -44,7 +50,7 @@ public class BillController {
     ResponseEntity<List<BillDto>> findAll() {
         try {
             return billService.findAll();
-        } catch (Exception ex){
+        } catch (Exception ex) {
             log.error("Failed call findAll", ex);
             return new ResponseEntity<>(Collections.emptyList(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -52,10 +58,10 @@ public class BillController {
 
     @GetMapping(path = "/{id}/pdf")
     @Operation(summary = "Get pdf report for given bill id")
-    ResponseEntity<byte[]> findPdf(@PathVariable Integer id){
-        try{
+    ResponseEntity<byte[]> findPdf(@PathVariable final Integer id) {
+        try {
             return billService.findPdf(id);
-        } catch (Exception ex){
+        } catch (Exception ex) {
             log.error("Failed call findPdf", ex);
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -63,10 +69,10 @@ public class BillController {
 
     @DeleteMapping(path = "/{id}")
     @Operation(summary = "Delete bill")
-    ResponseEntity<String> delete(@PathVariable Integer id){
-        try{
+    ResponseEntity<String> delete(@PathVariable final Integer id) {
+        try {
             return billService.delete(id);
-        } catch (Exception ex){
+        } catch (Exception ex) {
             log.error("Failed call delete", ex);
             return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
         }

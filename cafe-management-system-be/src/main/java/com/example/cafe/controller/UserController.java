@@ -5,11 +5,16 @@ import com.example.cafe.model.dto.UserDto;
 import com.example.cafe.service.UserService;
 import com.example.cafe.util.CafeUtils;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +28,14 @@ public class UserController {
     private final UserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(@NotNull final UserService userService) {
         this.userService = userService;
     }
 
 
     @PostMapping(path = "/signup")
     @Operation(summary = "Signup user")
-    public ResponseEntity<String> signUp(@RequestBody(required = true) Map<String, String> requestMap) {
+    public ResponseEntity<String> signUp(@RequestBody(required = true) final Map<String, String> requestMap) {
         try {
             return userService.signUp(requestMap);
         } catch (Exception ex) {
@@ -41,7 +46,7 @@ public class UserController {
 
     @PostMapping(path = "/login")
     @Operation(summary = "Login user")
-    public ResponseEntity<String> login(@RequestBody(required = true) Map<String, String> requestMap) {
+    public ResponseEntity<String> login(@RequestBody(required = true) final Map<String, String> requestMap) {
         try {
             return userService.login(requestMap);
         } catch (Exception ex) {
@@ -63,7 +68,7 @@ public class UserController {
 
     @PostMapping("/update")
     @Operation(summary = "Update user")
-    public ResponseEntity<String> update(@RequestBody(required = true) Map<String, String> requestMap) {
+    public ResponseEntity<String> update(@RequestBody(required = true) final Map<String, String> requestMap) {
         try {
             return userService.update(requestMap);
         } catch (Exception ex) {
@@ -85,7 +90,7 @@ public class UserController {
 
     @PostMapping("/changePassword")
     @Operation(summary = "Change user password")
-    ResponseEntity<String> changePassword(@RequestBody Map<String, String> requestMap) {
+    ResponseEntity<String> changePassword(@RequestBody final Map<String, String> requestMap) {
         try {
             return userService.changePassword(requestMap);
         } catch (Exception ex) {
@@ -96,7 +101,7 @@ public class UserController {
 
     @PostMapping("/forgotPassword")
     @Operation(summary = "Forgot password")
-    ResponseEntity<String> forgotPassword(@RequestBody Map<String, String> requestMap){
+    ResponseEntity<String> forgotPassword(@RequestBody final Map<String, String> requestMap) {
         try {
             return userService.forgotPassword(requestMap);
         } catch (Exception ex) {

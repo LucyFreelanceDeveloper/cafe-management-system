@@ -2,6 +2,7 @@ package com.example.cafe.controller;
 
 import com.example.cafe.service.DashboardService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,7 @@ public class DashBoardController {
     private final DashboardService dashboardService;
 
     @Autowired
-    public DashBoardController(DashboardService dashboardService) {
+    public DashBoardController(@NotNull final DashboardService dashboardService) {
         this.dashboardService = dashboardService;
     }
 

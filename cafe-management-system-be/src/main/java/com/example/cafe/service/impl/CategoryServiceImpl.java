@@ -68,7 +68,7 @@ public class CategoryServiceImpl implements CategoryService {
         try {
             if (jwtFilter.isAdmin()) {
                 Optional<CategoryEntity> categoryWrapper = categoryRepository.findById(categoryDto.getId());
-                if(categoryWrapper.isPresent()){
+                if (categoryWrapper.isPresent()) {
                     CategoryEntity category = categoryWrapper.get();
                     category.setName(categoryDto.getName());
                     categoryRepository.save(category);

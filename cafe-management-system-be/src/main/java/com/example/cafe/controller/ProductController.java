@@ -11,7 +11,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +32,13 @@ public class ProductController {
     private final ProductService productService;
 
     @Autowired
-    public ProductController(ProductService productService) {
+    public ProductController(@NotNull final ProductService productService) {
         this.productService = productService;
     }
 
     @PostMapping
     @Operation(summary = "Create product")
-    ResponseEntity<String> create(@NotNull @Valid @RequestBody ProductDto productDto) {
+    ResponseEntity<String> create(@NotNull @Valid @RequestBody final ProductDto productDto) {
         try {
             return productService.create(productDto);
         } catch (Exception ex) {
@@ -41,7 +49,7 @@ public class ProductController {
 
     @GetMapping
     @Operation(summary = "Get all products")
-    ResponseEntity<List<ProductDto>> findAll(@RequestParam(required = false) Integer categoryId) {
+    ResponseEntity<List<ProductDto>> findAll(@RequestParam(required = false) final Integer categoryId) {
         try {
             return categoryId == null ? productService.findAll() : productService.findByCategoryId(categoryId);
         } catch (Exception ex) {
@@ -52,7 +60,7 @@ public class ProductController {
 
     @GetMapping(path = "/{id}")
     @Operation(summary = "Get product by id")
-    ResponseEntity<ProductDto> findById(@PathVariable Integer id) {
+    ResponseEntity<ProductDto> findById(@PathVariable final Integer id) {
         try {
             return productService.findById(id);
         } catch (Exception ex) {
@@ -63,7 +71,7 @@ public class ProductController {
 
     @PutMapping
     @Operation(summary = "Update product")
-    ResponseEntity<String> update(@RequestBody ProductDto productDto) {
+    ResponseEntity<String> update(@RequestBody final ProductDto productDto) {
         try {
             return productService.update(productDto);
         } catch (Exception ex) {
@@ -74,7 +82,7 @@ public class ProductController {
 
     @DeleteMapping(path = "/{id}")
     @Operation(summary = "Delete product")
-    ResponseEntity<String> delete(@PathVariable Integer id) {
+    ResponseEntity<String> delete(@PathVariable final Integer id) {
         try {
             return productService.delete(id);
         } catch (Exception ex) {

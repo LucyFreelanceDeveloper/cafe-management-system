@@ -5,6 +5,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,14 +28,14 @@ public class JwtFilter extends OncePerRequestFilter {
     private String userName = null;
 
     @Autowired
-    public JwtFilter(JwtUtil jwtUtil, CustomerUserDetailsService customerUserDetailsService) {
+    public JwtFilter(@NotNull final JwtUtil jwtUtil, @NotNull final CustomerUserDetailsService customerUserDetailsService) {
         this.jwtUtil = jwtUtil;
         this.customerUserDetailsService = customerUserDetailsService;
     }
 
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain) throws ServletException, IOException {
         if (request.getServletPath().matches("/user/login|/user/forgotPassword|/user/signup|swagger-ui/*|v3/api-docs|v3/api-docs/*")) {
             filterChain.doFilter(request, response);
         } else {
@@ -42,7 +43,8 @@ public class JwtFilter extends OncePerRequestFilter {
             String token = null;
 
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-                token = authorizationHeader.substring(7);
+                final int startOfToken = 7;
+                token = authorizationHeader.substring(startOfToken);
                 userName = jwtUtil.extractUsername(token);
                 claims = jwtUtil.extractAllClaims(token);
 
