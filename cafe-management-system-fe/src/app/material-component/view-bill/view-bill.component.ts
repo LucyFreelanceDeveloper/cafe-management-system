@@ -32,7 +32,7 @@ export class ViewBillComponent implements OnInit {
     this.tableData();
   }
 
-  tableData(){
+  tableData() {
     this.billService.getAll().subscribe((response: any) => {
       this.ngxService.stop();
       this.dataSource = new MatTableDataSource(response);
@@ -53,10 +53,10 @@ export class ViewBillComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLocaleLowerCase();
   }
 
-  handleViewAction(values:any) {
+  handleViewAction(values: any) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = {
-      data:values
+      data: values
     }
     dialogConfig.width = "100%";
     const dialogRef = this.dialog.open(ViewBillProductsComponent, dialogConfig);
@@ -65,16 +65,16 @@ export class ViewBillComponent implements OnInit {
     });
   }
 
-  downloadReportAction(values:any){
+  downloadReportAction(values: any) {
     this.ngxService.start();
     this.downloadFile(values.id);
   }
 
-  downloadFile(id:number) {
+  downloadFile(id: number) {
     this.billService.getPdf(id).subscribe((response: any) => {
       saveAs(response, 'Bill_' + id + '.pdf');
       this.ngxService.stop();
-    },(error: any) => {
+    }, (error: any) => {
       this.ngxService.stop();
       console.log(error);
       if (error.error?.message) {
@@ -86,7 +86,7 @@ export class ViewBillComponent implements OnInit {
     })
   }
 
-  handleDeleteAction(values:any){
+  handleDeleteAction(values: any) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = {
       message: "delete " + values.name + " bill",

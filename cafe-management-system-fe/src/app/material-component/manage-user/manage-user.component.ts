@@ -12,13 +12,13 @@ import { GlobalConstants } from 'src/app/shared/global-constants';
 })
 export class ManageUserComponent implements OnInit {
 
-  displayedColumns:string[] = ['name', 'email', 'contactNumber', 'status'];
-  dataSource:any;
-  responseMessage:any
+  displayedColumns: string[] = ['name', 'email', 'contactNumber', 'status'];
+  dataSource: any;
+  responseMessage: any
 
-  constructor(private ngxService:NgxUiLoaderService, 
-    private userService:UserService,
-    private snackbarService:SnackbarService) { }
+  constructor(private ngxService: NgxUiLoaderService,
+    private userService: UserService,
+    private snackbarService: SnackbarService) { }
 
   ngOnInit(): void {
     this.ngxService.start();

@@ -9,9 +9,9 @@ export class DashboardService {
 
   private readonly dashboardUrl = environment.apiUrl + "/dashboard"
 
-  constructor(private httpClient:HttpClient) { }
+  constructor(private httpClient: HttpClient) { }
 
-  getDetails(){
+  getDetails() {
     return this.httpClient.get(this.dashboardUrl + "/details");
   }
 }

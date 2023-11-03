@@ -9,42 +9,42 @@ import { ManageUserComponent } from './manage-user/manage-user.component';
 
 export const MaterialRoutes: Routes = [
     {
-        path:`category`,
-        component:ManageCategoryComponent,
-        canActivate:[RouteGuardService],
-        data:{
+        path: `category`,
+        component: ManageCategoryComponent,
+        canActivate: [RouteGuardService],
+        data: {
             expectedRole: ['admin']
         }
     },
     {
-        path:`product`,
-        component:ManageProductComponent,
-        canActivate:[RouteGuardService],
-        data:{
+        path: `product`,
+        component: ManageProductComponent,
+        canActivate: [RouteGuardService],
+        data: {
             expectedRole: ['admin']
         }
     },
     {
-        path:`order`,
-        component:ManageOrderComponent,
-        canActivate:[RouteGuardService],
-        data:{
+        path: `order`,
+        component: ManageOrderComponent,
+        canActivate: [RouteGuardService],
+        data: {
             expectedRole: ['admin', 'user']
         }
     },
     {
-        path:`bill`,
-        component:ViewBillComponent,
-        canActivate:[RouteGuardService],
-        data:{
+        path: `bill`,
+        component: ViewBillComponent,
+        canActivate: [RouteGuardService],
+        data: {
             expectedRole: ['admin', 'user']
         }
     },
     {
-        path:`user`,
-        component:ManageUserComponent,
-        canActivate:[RouteGuardService],
-        data:{
+        path: `user`,
+        component: ManageUserComponent,
+        canActivate: [RouteGuardService],
+        data: {
             expectedRole: ['admin']
         }
     }

@@ -13,8 +13,8 @@ import { GlobalConstants } from '../shared/global-constants';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  password:boolean = true;
-  loginForm:any = FormGroup;
+  password: boolean = true;
+  loginForm: any = FormGroup;
   responseMessage: any;
 
 
@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  handleLogin(){
+  handleLogin() {
     this.ngxService.start();
     var formData = this.loginForm.value;
     var data = {
@@ -42,18 +42,18 @@ export class LoginComponent implements OnInit {
       password: formData.password
     }
 
-    this.userService.login(data).subscribe((response:any)=>{
+    this.userService.login(data).subscribe((response: any) => {
       this.ngxService.stop();
       this.responseMessage = response?.message;
       this.dialogRef.close();
       this.snackBackService.openSnackBar(this.responseMessage, "");
-      localStorage.setItem("token",response.token);
+      localStorage.setItem("token", response.token);
       this.router.navigate(["/cafe/dashboard"]);
-    }, (error)=>{
+    }, (error) => {
       this.ngxService.stop();
-      if(error.error?.message){
+      if (error.error?.message) {
         this.responseMessage = error.error?.message;
-      } else{
+      } else {
         this.responseMessage = GlobalConstants.genericError;
       }
       this.snackBackService.openSnackBar(this.responseMessage, GlobalConstants.error);

@@ -45,4 +45,4 @@ import { ManageUserComponent } from './manage-user/manage-user.component';
     ManageUserComponent
   ]
 })
-export class MaterialComponentsModule {}
+export class MaterialComponentsModule { }

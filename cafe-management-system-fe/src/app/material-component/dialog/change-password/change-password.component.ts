@@ -16,37 +16,37 @@ export class ChangePasswordComponent implements OnInit {
   oldPassword = true;
   newPassword = true;
   confirmPassword = true;
-  changePasswordForm:any = FormGroup;
+  changePasswordForm: any = FormGroup;
 
-  responseMessage:any;
+  responseMessage: any;
 
   constructor(
-    private formBuilder:FormBuilder,
-    private userService:UserService,
-    public dialogRef:MatDialogRef<ChangePasswordComponent>,
-    private ngxService:NgxUiLoaderService,
-    private snackbarService:SnackbarService
+    private formBuilder: FormBuilder,
+    private userService: UserService,
+    public dialogRef: MatDialogRef<ChangePasswordComponent>,
+    private ngxService: NgxUiLoaderService,
+    private snackbarService: SnackbarService
   ) { }
 
   ngOnInit(): void {
     this.changePasswordForm = this.formBuilder.group(
       {
         oldPassword: [null, Validators.required],
-        newPassword:[null, Validators.required],
-        confirmPassword:[null, Validators.required]
+        newPassword: [null, Validators.required],
+        confirmPassword: [null, Validators.required]
       }
     )
   }
 
-  validateSubmit(){
-    if(this.changePasswordForm.controls["newPassword"].value != this.changePasswordForm.controls["confirmPassword"].value){
+  validateSubmit() {
+    if (this.changePasswordForm.controls["newPassword"].value != this.changePasswordForm.controls["confirmPassword"].value) {
       return true;
     } else {
       return false;
     }
   }
 
-  handlePasswordChangeSubmit(){
+  handlePasswordChangeSubmit() {
     this.ngxService.start();
     var formData = this.changePasswordForm.value;
     var data = {
@@ -55,15 +55,15 @@ export class ChangePasswordComponent implements OnInit {
       confirmPassword: formData.confirmPassword
     }
 
-    this.userService.changePassword(data).subscribe((response:any)=>{
+    this.userService.changePassword(data).subscribe((response: any) => {
       this.ngxService.stop();
       this.responseMessage = response?.message;
       this.dialogRef.close();
       this.snackbarService.openSnackBar(this.responseMessage, "success");
-    }, (error)=>{
+    }, (error) => {
       console.log(error);
       this.ngxService.stop();
-      if(error.error?.message){
+      if (error.error?.message) {
         this.responseMessage = error.error?.messag;
       } else {
         this.responseMessage = GlobalConstants.genericError;

@@ -13,17 +13,19 @@
         <div fxFlex fxLayout="column">
             <mat-form-field apperance="standard" fxFlex>
                 <mat-label>Email</mat-label>
-                <input matInput formControlName="email" required/>
+                <input matInput formControlName="email" required />
                 <mat-error *ngIf="loginForm.controls.email.touched && loginForm.controls.email.invalid">
                     <span *ngIf="loginForm.controls.email.errors.required">This field is mandatory.</span>
                     <span *ngIf="loginForm.controls.email.errors.pattern">This field is invalid.</span>
                 </mat-error>
             </mat-form-field>
-    
+
             <mat-form-field apperance="standard" fxFlex>
                 <mat-label>Password</mat-label>
-                <input matInput formControlName="password" type="password" required [type]="password ? 'password' : 'text'"/>
-                <button type="button" mat-icon-button matSuffix (click)="password = !password" [attr.aria-label]="'Hide password'" [attr.aria-pressed] = "password">
+                <input matInput formControlName="password" type="password" required
+                    [type]="password ? 'password' : 'text'" />
+                <button type="button" mat-icon-button matSuffix (click)="password = !password"
+                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="password">
                     <mat-icon>{{password ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button>
                 <mat-error *ngIf="loginForm.controls.password.touched && loginForm.controls.password.invalid">
@@ -35,7 +37,8 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-    <button mat-raised-button color="primary" type="submit" (click)="handleLogin()" [disabled]="!(loginForm.valid && loginForm.dirty)">
+    <button mat-raised-button color="primary" type="submit" (click)="handleLogin()"
+        [disabled]="!(loginForm.valid && loginForm.dirty)">
         <mat-icon>login</mat-icon> Login
     </button>
     <button mat-raised-button color="warn" mat-dialog-close>

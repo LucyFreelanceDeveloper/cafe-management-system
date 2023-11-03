@@ -28,15 +28,15 @@ export class ProductService {
     return this.httpClient.get(this.productsUrl);
   }
 
-  getByCategory(id: any){
+  getByCategory(id: any) {
     return this.httpClient.get(this.productsUrl + "?categoryId=" + id);
   }
 
   delete(id: any) {
-    return this.httpClient.delete(this.productsUrl+ "/" + id);
+    return this.httpClient.delete(this.productsUrl + "/" + id);
   }
 
-  getById(id: number){
+  getById(id: number) {
     return this.httpClient.get(this.productsUrl + "/" + id);
   }
 }

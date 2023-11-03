@@ -185,7 +185,7 @@ export class ManageOrderComponent implements OnInit {
     })
   }
 
-  downloadFile(id:number) {
+  downloadFile(id: number) {
     this.billService.getPdf(id).subscribe((response: any) => {
       saveAs(response, 'Bill_' + id + '.pdf');
       this.ngxService.stop();

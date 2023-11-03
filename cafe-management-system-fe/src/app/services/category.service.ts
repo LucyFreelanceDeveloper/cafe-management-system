@@ -7,8 +7,8 @@ import { environment } from 'src/environments/environment';
 })
 export class CategoryService {
 
-  private readonly categoriesUrl:string = environment.apiUrl + "/categories";
-  private readonly defaultHeaders:HttpHeaders = new HttpHeaders().set("Content-Type", "application/json");
+  private readonly categoriesUrl: string = environment.apiUrl + "/categories";
+  private readonly defaultHeaders: HttpHeaders = new HttpHeaders().set("Content-Type", "application/json");
 
   constructor(private httpClient: HttpClient) {
 
@@ -31,12 +31,12 @@ export class CategoryService {
   }
 
   delete(id: any) {
-    return this.httpClient.delete(this.categoriesUrl + "/" +id, {
+    return this.httpClient.delete(this.categoriesUrl + "/" + id, {
       headers: this.defaultHeaders
     });
   }
 
-  getFiltered(){
+  getFiltered() {
     return this.httpClient.get(this.categoriesUrl + "?filterValue=true")
   }
 }
