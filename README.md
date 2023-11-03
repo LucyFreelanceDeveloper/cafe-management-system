@@ -37,3 +37,7 @@ docker compose up
 * **cafe-management-system-db**: jdbc:mysql://localhost:33061/cafe
 * **cafe-management-system-be**: http://localhost:8081/swagger-ui/index.html
 * **cafe-management-system-fe**: http://localhost:4200/
+
+### Users
+* **Admin** {username: admin@mailnator.com, password: 12345}
+* **User** {username: user@mailnator.com, password: 12345 }
