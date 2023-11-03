@@ -26,9 +26,17 @@ Service contains cafe database in MySQL database for store all application data.
 
 ## How to run
 ```bash
-docker build --tag cafe-management-system-db cafe-management-system-db/.
-docker build --tag cafe-management-system-be cafe-management-system-be/.
-docker build --tag cafe-management-system-fe cafe-management-system-fe/.
+cd cafe-management-system-db
+docker build --tag cafe-management-system-db .
+cd ..
+
+cd cafe-management-system-be
+docker build --tag cafe-management-system-be .
+cd ..
+
+cd cafe-management-system-fe
+docker build --tag cafe-management-system-fe .
+cd ..
 
 docker compose up
 ```
