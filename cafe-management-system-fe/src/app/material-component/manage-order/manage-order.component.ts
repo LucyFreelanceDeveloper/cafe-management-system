@@ -191,6 +191,7 @@ export class ManageOrderComponent implements OnInit {
       this.ngxService.stop();
     }, (error: any) => {
       console.log(error);
+      this.ngxService.stop();
       if (error.error?.message) {
         this.responseMessage = error.error?.message
       } else {
