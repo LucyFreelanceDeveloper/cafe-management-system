@@ -9,12 +9,17 @@ services:
       - cafe-management-system-network
   cafe-management-system-be:
     image: cafe-management-system-be
+    depends_on:
+      - cafe-management-system-db
     ports:
       - "8081:8081"
     networks:
       - cafe-management-system-network
   cafe-management-system-fe:
     image: cafe-management-system-fe
+    depends_on:
+      - cafe-management-system-db
+      - cafe-management-system-be
     ports:
       - "4200:4200"
     networks:
