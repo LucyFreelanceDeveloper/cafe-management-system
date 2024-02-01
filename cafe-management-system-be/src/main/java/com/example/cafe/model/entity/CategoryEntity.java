@@ -18,14 +18,9 @@ import java.util.Set;
 @EqualsAndHashCode
 @ToString
 @Table(name = "category")
-public class CategoryEntity implements Serializable {
+public class CategoryEntity extends BasicIdEntity implements Serializable{
 
     private static final long serialVersionUID = 1L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
 
     @Column(name = "name")
     private String name;
