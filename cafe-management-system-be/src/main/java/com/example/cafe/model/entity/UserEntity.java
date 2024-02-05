@@ -16,7 +16,7 @@ import java.io.Serializable;
 @Setter
 @EqualsAndHashCode
 @ToString
-@Table(name = "user")
+@Table(name = "\"user\"")
 public class UserEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
