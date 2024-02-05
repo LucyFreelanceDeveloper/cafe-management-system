@@ -32,7 +32,7 @@ class CategoryRepositoryIntegrationTest {
 
     @Test
     public void findCategory() {
-        final Optional<CategoryEntity> categoryWrapper = categoryRepository.findById(1);
+        final Optional<CategoryEntity> categoryWrapper = categoryRepository.findById(categoryId);
         assertTrue(categoryWrapper.isPresent());
 
         final CategoryEntity category = categoryWrapper.get();
@@ -42,7 +42,7 @@ class CategoryRepositoryIntegrationTest {
 
     @Test
     public void findNotExistentCategory() {
-        final Optional<CategoryEntity> categoryWrapper = categoryRepository.findById(-1);
+        final Optional<CategoryEntity> categoryWrapper = categoryRepository.findById(65);
         assertTrue(categoryWrapper.isEmpty());
     }
 
