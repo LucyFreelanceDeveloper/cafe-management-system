@@ -33,7 +33,7 @@ class ProductRepositoryIntegrationTest {
 
     @Test
     public void findProduct() {
-        final Optional<ProductEntity> productWrapper = productRepository.findById(1);
+        final Optional<ProductEntity> productWrapper = productRepository.findById(productId);
         assertTrue(productWrapper.isPresent());
 
         final ProductEntity product = productWrapper.get();
