@@ -19,9 +19,6 @@ class CategoryRepositoryIntegrationTest {
     private final Integer categoryId = 1;
 
     @Autowired
-    private ProductRepository productRepository;
-
-    @Autowired
     private CategoryRepository categoryRepository;
 
     @Test
@@ -83,5 +80,4 @@ class CategoryRepositoryIntegrationTest {
         categoryRepository.deleteById(categoryId);
         assertTrue(categoryRepository.findById(categoryId).isEmpty());
     }
-
 }
