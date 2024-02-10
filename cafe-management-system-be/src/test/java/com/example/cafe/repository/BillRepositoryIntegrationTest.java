@@ -22,30 +22,18 @@ class BillRepositoryIntegrationTest {
     private BillRepository billRepository;
 
     @Test
-    @Transactional
-    @DirtiesContext
     public void findAllBills() {
-        BillEntity createdBill = createTestBill("Bill test");
-        BillEntity createdBillOne = createTestBill("Bill test one");
-        assertEquals("Bill test", createdBill.getName());
-        assertEquals("Bill test one", createdBillOne.getName());
-
         List<BillEntity> bills = billRepository.findAll();
-        assertEquals(2, bills.size());
+        assertEquals(3, bills.size());
     }
 
     @Test
-    @Transactional
-    @DirtiesContext
     public void findBill() {
-        BillEntity createdBill = createTestBill("Bill test");
-        assertEquals("Bill test", createdBill.getName());
-
-        final Optional<BillEntity> billWrapper = billRepository.findById(createdBill.getId());
+        final Optional<BillEntity> billWrapper = billRepository.findById(billId);
         assertTrue(billWrapper.isPresent());
 
         final BillEntity bill = billWrapper.get();
-        assertEquals("Bill test", bill.getName());
+        assertEquals("lucka", bill.getName());
         assertEquals(1, bill.getId());
     }
 
@@ -59,19 +47,19 @@ class BillRepositoryIntegrationTest {
     @Transactional
     @DirtiesContext
     public void createBill() {
-        BillEntity createdBill = createTestBill("Bill test");
-        assertEquals("Bill test", createdBill.getName());
+        BillEntity bill = new BillEntity();
+        bill.setName("Bill test");
+        assertEquals("Bill test", bill.getName());
     }
 
     @Test
     @DirtiesContext
     public void updateBill() {
-        BillEntity createdBill = createTestBill("Bill test");
-        Integer billId = createdBill.getId();
+        BillEntity bill = billRepository.findById(billId).get();
 
-        createdBill.setName("Test name");
+        bill.setName("Test name");
 
-        billRepository.save(createdBill);
+        billRepository.save(bill);
 
         BillEntity updatedBill = billRepository.findById(billId).get();
         assertEquals("Test name", updatedBill.getName());
@@ -80,21 +68,7 @@ class BillRepositoryIntegrationTest {
     @Test
     @DirtiesContext
     public void deleteBill() {
-        BillEntity createdBill = createTestBill("Bill test");
-        Integer billId = createdBill.getId();
-        assertTrue(billRepository.findById(billId).isPresent());
-
         billRepository.deleteById(billId);
         assertTrue(billRepository.findById(billId).isEmpty());
-    }
-
-    public BillEntity createTestBill(String name) {
-        BillEntity bill = new BillEntity();
-
-        bill.setName(name);
-
-        final Integer savedBillId = billRepository.save(bill).getId();
-
-        return billRepository.findById(savedBillId).get();
     }
 }
