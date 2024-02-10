@@ -146,3 +146,9 @@ INSERT INTO `product` (`name`, `description`, `price`, `status`, `category_id`) 
 ('Gummy Bears', 'Assorted gummy bears', 2, 'Available', 10),
 ('Granola Bars', 'Bars with oats, nuts, and dried fruits', 3, 'Available', 10),
 ('Rice Cakes', 'Crispy rice cakes', 2, 'Available', 10);
+
+-- Bills
+INSERT INTO cafe.bill (contact_number,created_by,email,name,payment_method,product_detail,total,uuid) VALUES
+	 ('1234567890','admin@mailnator.com','admin@mailnator.com','lucka','Cash','[{"id": 6, "name": "Macchiato", "price": 4, "total": 4, "category": "Cafe", "quantity": "1"}, {"id": 9, "name": "Vanilla Latte", "price": 5, "total": 50, "category": "Cafe", "quantity": "10"}]',54,'Bill-1707591457620'),
+	 ('1234567890','admin@mailnator.com','user@mailnator.com','lucka','Debit Card','[{"id": 27, "name": "Pork Chop", "price": 11, "total": 11, "category": "Meals", "quantity": "1"}, {"id": 38, "name": "Vegetable Pasta Primavera", "price": 9, "total": 9, "category": "Pasta", "quantity": "1"}, {"id": 46, "name": "Hot Chocolate", "price": 4, "total": 4, "category": "Beverages", "quantity": "1"}]',24,'Bill-1707591510344'),
+	 ('1234567890','admin@mailnator.com','user@mailnator.com','jirka','Credit Card','[{"id": 23, "name": "Beef Stroganoff", "price": 12, "total": 12, "category": "Meals", "quantity": "1"}, {"id": 38, "name": "Vegetable Pasta Primavera", "price": 9, "total": 9, "category": "Pasta", "quantity": "1"}]',21,'Bill-1707591543646');
