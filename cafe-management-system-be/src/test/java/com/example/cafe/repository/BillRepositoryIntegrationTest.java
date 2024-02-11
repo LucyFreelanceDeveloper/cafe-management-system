@@ -39,8 +39,8 @@ class BillRepositoryIntegrationTest {
 
     @Test
     public void findNotExistentBill() {
-        final Optional<BillEntity> categoryWrapper = billRepository.findById(65);
-        assertTrue(categoryWrapper.isEmpty());
+        final Optional<BillEntity> billWrapper = billRepository.findById(65);
+        assertTrue(billWrapper.isEmpty());
     }
 
     @Test
