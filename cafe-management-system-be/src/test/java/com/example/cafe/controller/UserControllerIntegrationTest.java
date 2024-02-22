@@ -5,10 +5,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,27 +54,40 @@ public class UserControllerIntegrationTest {
     }
 
     @Test
-    public void getAllUsers() {
+    public void getAllUsers() throws Exception {
         Map<String, String> loginRequest = Map.of("email", "admin@mailnator.com",
                 "password", "12345");
         ResponseEntity<String> loginResponse = restTemplate.postForEntity("/user/login", loginRequest, String.class);
         assertThat(loginResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        ResponseEntity<String> response = restTemplate.getForEntity("/get", String.class);
-        assertThat(loginResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + obtainAccessToken("admin@mailnator.com", "12345"));
+
+        HttpEntity<String> entity = new HttpEntity<String>("application/json", headers);
+
+        ResponseEntity<String> response = restTemplate.exchange("/user/get", HttpMethod.GET, entity, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
     @DirtiesContext
-    public void updateUser() {
+    public void updateUser() throws Exception {
         Map<String, String> loginRequest = Map.of("email", "admin@mailnator.com",
                 "password", "12345");
         ResponseEntity<String> loginResponse = restTemplate.postForEntity("/user/login", loginRequest, String.class);
         assertThat(loginResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        Map<String, String> updateRequest = Map.of("status", "true");
-        ResponseEntity<String> response = restTemplate.postForEntity("/update", updateRequest, String.class);
-        assertThat(loginResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + obtainAccessToken("admin@mailnator.com", "12345"));
+
+        Map<String, Object> updateRequest = new HashMap<>();
+        updateRequest.put("status", "true");
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(updateRequest, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange("/user/update", HttpMethod.POST, entity, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
@@ -81,7 +97,7 @@ public class UserControllerIntegrationTest {
         ResponseEntity<String> loginResponse = restTemplate.postForEntity("/user/login", loginRequest, String.class);
         assertThat(loginResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        ResponseEntity<String> response = restTemplate.getForEntity("/checkToken", String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity("/user/checkToken", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
@@ -95,7 +111,7 @@ public class UserControllerIntegrationTest {
 
         Map<String, String> changePasswordRequest = Map.of("oldPassword", "12345",
                 "newPassword", "123");
-        ResponseEntity<String> changePasswordResponse = restTemplate.postForEntity("/changePassword", changePasswordRequest, String.class);
+        ResponseEntity<String> changePasswordResponse = restTemplate.postForEntity("/user/changePassword", changePasswordRequest, String.class);
         assertThat(changePasswordResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(changePasswordResponse.getBody()).contains("123");
     }
@@ -112,7 +128,6 @@ public class UserControllerIntegrationTest {
 //        Map<String, String> signUpRequest = new HashMap<>();
 //        signUpRequest.put("email", email);
 //        signUpRequest.put("password", password);
-//        // Další údaje pro registraci nového uživatele můžete přidat podle potřeby
 //        return restTemplate.postForEntity("/users", signUpRequest, String.class);
 //    }
 
