@@ -60,16 +60,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     public void getAllUsers() throws Exception {
-        Map<String, String> loginRequest = Map.of("email", ADMIN_MAIL,
-                "password", ADMIN_PASSWORD);
-        ResponseEntity<String> loginResponse = restTemplate.postForEntity("/user/login", loginRequest, String.class);
-        assertThat(loginResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Authorization", "Bearer " + obtainAccessToken(ADMIN_MAIL, ADMIN_PASSWORD));
-
-        HttpEntity<String> entity = new HttpEntity<String>("application/json", headers);
+        HttpEntity<String> entity = new HttpEntity<String>("application/json", loginAdminUserHeaders());
 
         ResponseEntity<String> response = restTemplate.exchange("/user/get", HttpMethod.GET, entity, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -78,19 +69,10 @@ public class UserControllerIntegrationTest {
     @Test
     @DirtiesContext
     public void updateUser() throws Exception {
-        Map<String, String> loginRequest = Map.of("email", ADMIN_MAIL,
-                "password", ADMIN_PASSWORD);
-        ResponseEntity<String> loginResponse = restTemplate.postForEntity("/user/login", loginRequest, String.class);
-        assertThat(loginResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Authorization", "Bearer " + obtainAccessToken(ADMIN_MAIL, ADMIN_PASSWORD));
-
         Map<String, Object> updateRequest = new HashMap<>();
         updateRequest.put("id", ADMIN_ID);
         updateRequest.put("status", "true");
-        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(updateRequest, headers);
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(updateRequest, loginAdminUserHeaders());
 
         ResponseEntity<String> response = restTemplate.exchange("/user/update", HttpMethod.POST, entity, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -98,16 +80,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     public void checkToken() throws Exception {
-        Map<String, String> loginRequest = Map.of("email", ADMIN_MAIL,
-                "password", ADMIN_PASSWORD);
-        ResponseEntity<String> loginResponse = restTemplate.postForEntity("/user/login", loginRequest, String.class);
-        assertThat(loginResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Authorization", "Bearer " + obtainAccessToken(ADMIN_MAIL, ADMIN_PASSWORD));
-
-        HttpEntity<String> entity = new HttpEntity<String>("application/json", headers);
+        HttpEntity<String> entity = new HttpEntity<String>("application/json", loginAdminUserHeaders());
 
         ResponseEntity<String> response = restTemplate.exchange("/user/checkToken", HttpMethod.GET, entity, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -116,6 +89,17 @@ public class UserControllerIntegrationTest {
     @Test
     @DirtiesContext
     public void changePassword() throws Exception {
+        Map<String, Object> updateRequest = new HashMap<>();
+        updateRequest.put("oldPassword", ADMIN_PASSWORD);
+        updateRequest.put("newPassword", "123");
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(updateRequest, loginAdminUserHeaders());
+
+        ResponseEntity<String> response = restTemplate.exchange("/user/changePassword", HttpMethod.POST, entity, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).contains("Password update successfully");
+    }
+
+    private HttpHeaders loginAdminUserHeaders() throws Exception {
         Map<String, String> loginRequest = Map.of("email", ADMIN_MAIL,
                 "password", ADMIN_PASSWORD);
         ResponseEntity<String> loginResponse = restTemplate.postForEntity("/user/login", loginRequest, String.class);
@@ -124,15 +108,7 @@ public class UserControllerIntegrationTest {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + obtainAccessToken(ADMIN_MAIL, ADMIN_PASSWORD));
-
-        Map<String, Object> updateRequest = new HashMap<>();
-        updateRequest.put("oldPassword", ADMIN_PASSWORD);
-        updateRequest.put("newPassword", "123");
-        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(updateRequest, headers);
-
-        ResponseEntity<String> response = restTemplate.exchange("/user/changePassword", HttpMethod.POST, entity, String.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).contains("Password update successfully");
+        return headers;
     }
 
     private String obtainAccessToken(String username, String password) throws Exception {
