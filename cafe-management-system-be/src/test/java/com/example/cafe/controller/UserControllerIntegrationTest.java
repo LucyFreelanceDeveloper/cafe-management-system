@@ -9,6 +9,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
+import org.springframework.http.HttpMethod;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.HashMap;
@@ -18,6 +20,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerIntegrationTest {
+    public static final String ADMIN_MAIL = "admin@mailnator.com";
+    public static final String ADMIN_PASSWORD = "12345";
+    public static final String ADMIN_ID = "1";
     @Autowired
     private TestRestTemplate restTemplate;
 
@@ -39,15 +44,15 @@ public class UserControllerIntegrationTest {
 
     @Test
     public void loginUser() {
-        Map<String, String> loginRequest = Map.of("email", "admin@mailnator.com",
-                "password", "12345");
+        Map<String, String> loginRequest = Map.of("email", ADMIN_MAIL,
+                "password", ADMIN_PASSWORD);
         ResponseEntity<String> loginResponse = restTemplate.postForEntity("/user/login", loginRequest, String.class);
         assertThat(loginResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
     public void loginWithBadPassword() {
-        Map<String, String> loginRequest = Map.of("email", "admin@mailnator.com",
+        Map<String, String> loginRequest = Map.of("email", ADMIN_MAIL,
                 "password", "123");
         ResponseEntity<String> loginResponse = restTemplate.postForEntity("/user/login", loginRequest, String.class);
         assertThat(loginResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -55,14 +60,14 @@ public class UserControllerIntegrationTest {
 
     @Test
     public void getAllUsers() throws Exception {
-        Map<String, String> loginRequest = Map.of("email", "admin@mailnator.com",
-                "password", "12345");
+        Map<String, String> loginRequest = Map.of("email", ADMIN_MAIL,
+                "password", ADMIN_PASSWORD);
         ResponseEntity<String> loginResponse = restTemplate.postForEntity("/user/login", loginRequest, String.class);
         assertThat(loginResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Authorization", "Bearer " + obtainAccessToken("admin@mailnator.com", "12345"));
+        headers.set("Authorization", "Bearer " + obtainAccessToken(ADMIN_MAIL, ADMIN_PASSWORD));
 
         HttpEntity<String> entity = new HttpEntity<String>("application/json", headers);
 
@@ -73,16 +78,17 @@ public class UserControllerIntegrationTest {
     @Test
     @DirtiesContext
     public void updateUser() throws Exception {
-        Map<String, String> loginRequest = Map.of("email", "admin@mailnator.com",
-                "password", "12345");
+        Map<String, String> loginRequest = Map.of("email", ADMIN_MAIL,
+                "password", ADMIN_PASSWORD);
         ResponseEntity<String> loginResponse = restTemplate.postForEntity("/user/login", loginRequest, String.class);
         assertThat(loginResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Authorization", "Bearer " + obtainAccessToken("admin@mailnator.com", "12345"));
+        headers.set("Authorization", "Bearer " + obtainAccessToken(ADMIN_MAIL, ADMIN_PASSWORD));
 
         Map<String, Object> updateRequest = new HashMap<>();
+        updateRequest.put("id", ADMIN_ID);
         updateRequest.put("status", "true");
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(updateRequest, headers);
 
@@ -91,45 +97,43 @@ public class UserControllerIntegrationTest {
     }
 
     @Test
-    public void checkToken() {
-        Map<String, String> loginRequest = Map.of("email", "admin@mailnator.com",
-                "password", "12345");
+    public void checkToken() throws Exception {
+        Map<String, String> loginRequest = Map.of("email", ADMIN_MAIL,
+                "password", ADMIN_PASSWORD);
         ResponseEntity<String> loginResponse = restTemplate.postForEntity("/user/login", loginRequest, String.class);
         assertThat(loginResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        ResponseEntity<String> response = restTemplate.getForEntity("/user/checkToken", String.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + obtainAccessToken(ADMIN_MAIL, ADMIN_PASSWORD));
+
+        HttpEntity<String> entity = new HttpEntity<String>("application/json", headers);
+
+        ResponseEntity<String> response = restTemplate.exchange("/user/checkToken", HttpMethod.GET, entity, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
     @DirtiesContext
-    public void changePassword() {
-        Map<String, String> loginRequest = Map.of("email", "admin@mailnator.com",
-                "password", "12345");
+    public void changePassword() throws Exception {
+        Map<String, String> loginRequest = Map.of("email", ADMIN_MAIL,
+                "password", ADMIN_PASSWORD);
         ResponseEntity<String> loginResponse = restTemplate.postForEntity("/user/login", loginRequest, String.class);
         assertThat(loginResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        Map<String, String> changePasswordRequest = Map.of("oldPassword", "12345",
-                "newPassword", "123");
-        ResponseEntity<String> changePasswordResponse = restTemplate.postForEntity("/user/changePassword", changePasswordRequest, String.class);
-        assertThat(changePasswordResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(changePasswordResponse.getBody()).contains("123");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + obtainAccessToken(ADMIN_MAIL, ADMIN_PASSWORD));
+
+        Map<String, Object> updateRequest = new HashMap<>();
+        updateRequest.put("oldPassword", ADMIN_PASSWORD);
+        updateRequest.put("newPassword", "123");
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(updateRequest, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange("/user/changePassword", HttpMethod.POST, entity, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).contains("Password update successfully");
     }
-//    // Metoda pro přihlášení uživatele
-//    private ResponseEntity<String> loginUser(String email, String password) throws Exception {
-//        Map<String, String> loginRequest = new HashMap<>();
-//        loginRequest.put("email", email);
-//        loginRequest.put("password", password);
-//        return restTemplate.postForEntity("/user/login", loginRequest, String.class);
-//    }
-//
-//    // Metoda pro registraci nového uživatele
-//    private ResponseEntity<String> signUpUser(String email, String password) throws Exception {
-//        Map<String, String> signUpRequest = new HashMap<>();
-//        signUpRequest.put("email", email);
-//        signUpRequest.put("password", password);
-//        return restTemplate.postForEntity("/users", signUpRequest, String.class);
-//    }
 
     private String obtainAccessToken(String username, String password) throws Exception {
         Map<String, String> params = Map.of("email", username, "password", password);
