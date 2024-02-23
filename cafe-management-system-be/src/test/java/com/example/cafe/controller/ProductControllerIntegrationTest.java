@@ -28,6 +28,57 @@ class ProductControllerIntegrationTest {
     @Test
     @DirtiesContext
     void createProduct() throws Exception {
+        Map<String, Object> createRequest = new HashMap<>();
+        createRequest.put("categoryId", "1");
+        createRequest.put("name", "Pizza test");
+        createRequest.put("description", "Test");
+        createRequest.put("status", "Available");
+        createRequest.put("price", "10");
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(createRequest, loginAdminUserHeaders());
+
+        ResponseEntity<String> response = restTemplate.postForEntity("/products", entity, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    }
+
+    @Test
+    void findAll() throws Exception {
+        HttpEntity<String> entity = new HttpEntity<>("application/json", loginAdminUserHeaders());
+
+        ResponseEntity<String> response = restTemplate.exchange("/products", HttpMethod.GET, entity, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    void findById() throws Exception {
+        HttpEntity<String> entity = new HttpEntity<>("application/json", loginAdminUserHeaders());
+
+        ResponseEntity<String> response = restTemplate.exchange("/products/1", HttpMethod.GET, entity, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    @DirtiesContext
+    void update() throws Exception {
+        Map<String, Object> createRequest = new HashMap<>();
+        createRequest.put("categoryId", "1");
+        createRequest.put("name", "Pizza 1");
+        createRequest.put("description", "Test");
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(createRequest, loginAdminUserHeaders());
+
+        ResponseEntity<String> response = restTemplate.postForEntity("/products", entity, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    }
+
+    @Test
+    @DirtiesContext
+    void delete() throws Exception {
+        HttpEntity<String> entity = new HttpEntity<>("application/json", loginAdminUserHeaders());
+
+        ResponseEntity<String> response = restTemplate.exchange("/products/1", HttpMethod.DELETE, entity, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    private HttpHeaders loginAdminUserHeaders() throws Exception {
         Map<String, String> loginRequest = Map.of("email", ADMIN_MAIL,
                 "password", ADMIN_PASSWORD);
         ResponseEntity<String> loginResponse = restTemplate.postForEntity("/user/login", loginRequest, String.class);
@@ -36,33 +87,7 @@ class ProductControllerIntegrationTest {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + obtainAccessToken(ADMIN_MAIL, ADMIN_PASSWORD));
-
-        Map<String, Object> createRequest = new HashMap<>();
-        createRequest.put("categoryId", "1");
-        createRequest.put("name", "Pizza test");
-        createRequest.put("description", "Test");
-        createRequest.put("status", "Available");
-        createRequest.put("price", "10");
-        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(createRequest, headers);
-
-        ResponseEntity<String> response = restTemplate.postForEntity("/products", entity, String.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-    }
-
-    @Test
-    void findAll() {
-    }
-
-    @Test
-    void findById() {
-    }
-
-    @Test
-    void update() {
-    }
-
-    @Test
-    void delete() {
+        return headers;
     }
 
     private String obtainAccessToken(String username, String password) throws Exception {
