@@ -23,7 +23,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = CaffeManagementSystemApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestPropertySource(locations = "classpath:/application.properties")
 public class UserControllerIntegrationTest {
     public static final String ADMIN_MAIL = "admin@mailnator.com";
     public static final String ADMIN_PASSWORD = "12345";

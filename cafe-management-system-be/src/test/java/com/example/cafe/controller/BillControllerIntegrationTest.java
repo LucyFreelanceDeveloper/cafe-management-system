@@ -21,7 +21,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Disabled
 @SpringBootTest(classes = {CaffeManagementSystemApplication.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestPropertySource(locations = "classpath:/application.properties")
 class BillControllerIntegrationTest {
 
     public static final String ADMIN_MAIL = "admin@mailnator.com";
