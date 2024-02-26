@@ -1,5 +1,6 @@
 package com.example.cafe.controller;
 
+import com.example.cafe.CaffeManagementSystemApplication;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -7,12 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+
+@SpringBootTest(classes = {CaffeManagementSystemApplication.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestPropertySource(locations = "classpath:/application.properties")
 class DashBoardControllerIntegrationTest {
 
     public static final String ADMIN_MAIL = "admin@mailnator.com";
@@ -39,6 +43,7 @@ class DashBoardControllerIntegrationTest {
 
         entity = new HttpEntity<>("application/json", headers);
     }
+
     @Test
     void getCount() throws Exception {
         ResponseEntity<String> response = restTemplate.exchange("/dashboard/details", HttpMethod.GET, entity, String.class);

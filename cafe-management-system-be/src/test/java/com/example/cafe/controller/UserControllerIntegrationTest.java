@@ -1,5 +1,7 @@
 package com.example.cafe.controller;
 
+import com.example.cafe.CaffeManagementSystemApplication;
+import com.example.cafe.model.entity.UserEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +14,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.MediaType;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = CaffeManagementSystemApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestPropertySource(locations = "classpath:/application.properties")
 public class UserControllerIntegrationTest {
     public static final String ADMIN_MAIL = "admin@mailnator.com";
     public static final String ADMIN_PASSWORD = "12345";
@@ -62,8 +67,10 @@ public class UserControllerIntegrationTest {
     public void getAllUsers() throws Exception {
         HttpEntity<String> entity = new HttpEntity<String>("application/json", loginAdminUserHeaders());
 
-        ResponseEntity<String> response = restTemplate.exchange("/user/get", HttpMethod.GET, entity, String.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        UserEntity[] users = restTemplate.exchange("/user/get", HttpMethod.GET, entity, UserEntity[].class).getBody();
+        assertEquals(2, users.length, "Expected 3 accounts, but found " + users.length);
+        assertThat(users[0].getName()).isEqualTo("Admin");
+        assertThat(users[0].getId()).isEqualTo(1);
     }
 
     @Test
