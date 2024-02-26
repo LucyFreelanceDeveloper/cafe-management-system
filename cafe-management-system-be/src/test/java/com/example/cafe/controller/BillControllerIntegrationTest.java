@@ -46,6 +46,7 @@ class BillControllerIntegrationTest {
 
         ResponseEntity<String> response = restTemplate.postForEntity("/bills", entity, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(response.getBody()).isEqualTo("4");
     }
 
     @Test
