@@ -1,6 +1,8 @@
 package com.example.cafe.controller;
 
 import com.example.cafe.CaffeManagementSystemApplication;
+import com.example.cafe.model.dto.BillDto;
+import com.example.cafe.model.dto.ReportItemDto;
 import com.example.cafe.service.BillService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
@@ -10,16 +12,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Disabled
 @SpringBootTest(classes = {CaffeManagementSystemApplication.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class BillControllerIntegrationTest {
 
@@ -32,22 +35,10 @@ class BillControllerIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Disabled
     @Test
     @DirtiesContext
     void create() throws Exception {
-        Map<String, Object> createProductDetail = new HashMap<>();
-        createProductDetail.put("id", 23);
-        createProductDetail.put("name", "Beef Stroganoff");
-        createProductDetail.put("price", 12);
-        createProductDetail.put("total", 12);
-        createProductDetail.put("category", "Meals");
-        createProductDetail.put("quantity", "1");
-
-        JSONObject createProductJsonObject = new JSONObject(createProductDetail);
-
-        // Převod na JSON řetězec
-        String createProductJsonString = createProductJsonObject.toString();
+        List<ReportItemDto> items = List.of( new ReportItemDto(23, "Beef Stroganoff", "Meals", 12, 12d, 1d));
 
         Map<String, Object> createRequest = new HashMap<>();
         createRequest.put("name", "jirka");
@@ -55,7 +46,7 @@ class BillControllerIntegrationTest {
         createRequest.put("contactNumber", "1234567890");
         createRequest.put("paymentMethod", "Credit Card");
         createRequest.put("total", "10");
-        createRequest.put("productDetail", createProductJsonString);
+        createRequest.put("productDetail", objectMapper.writeValueAsString(items));
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(createRequest, loginAdminUserHeaders());
 
         ResponseEntity<String> response = restTemplate.postForEntity("/bills", entity, String.class);
@@ -66,8 +57,11 @@ class BillControllerIntegrationTest {
     void findAll() throws Exception {
         HttpEntity<String> entity = new HttpEntity<>("application/json", loginAdminUserHeaders());
 
-        ResponseEntity<String> response = restTemplate.exchange("/bills", HttpMethod.GET, entity, String.class);
+        ResponseEntity<List<BillDto>> response = restTemplate.exchange("/bills", HttpMethod.GET, entity, new ParameterizedTypeReference<List<BillDto>>(){});
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        List<BillDto> bills = response.getBody();
+        assertThat(bills.size()).isEqualTo(3);
     }
 
     @Test
@@ -79,7 +73,15 @@ class BillControllerIntegrationTest {
     }
 
     @Test
-    void delete() {
+    @DirtiesContext
+    void delete() throws Exception {
+        HttpEntity<String> entity = new HttpEntity<>("application/json", loginAdminUserHeaders());
+
+        ResponseEntity<String> response = restTemplate.exchange("/bills/1", HttpMethod.DELETE, entity, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        ResponseEntity<String> response1 = restTemplate.exchange("/bills/1/pdf", HttpMethod.GET, entity, String.class);
+        assertThat(response1.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     private HttpHeaders loginAdminUserHeaders() throws Exception {
