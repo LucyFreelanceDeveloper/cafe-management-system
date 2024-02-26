@@ -68,7 +68,7 @@ public class UserControllerIntegrationTest {
         HttpEntity<String> entity = new HttpEntity<String>("application/json", loginAdminUserHeaders());
 
         UserEntity[] users = restTemplate.exchange("/user/get", HttpMethod.GET, entity, UserEntity[].class).getBody();
-        assertEquals(2, users.length, "Expected 3 accounts, but found " + users.length);
+        assertEquals(2, users.length, "Expected 2 accounts, but found " + users.length);
         assertThat(users[0].getName()).isEqualTo("Admin");
         assertThat(users[0].getId()).isEqualTo(1);
     }
