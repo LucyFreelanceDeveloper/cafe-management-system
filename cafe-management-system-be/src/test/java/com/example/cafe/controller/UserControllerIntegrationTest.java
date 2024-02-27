@@ -99,6 +99,18 @@ public class UserControllerIntegrationTest {
         assertThat(response.getBody()).contains("Password update successfully");
     }
 
+    @Test
+    @DirtiesContext
+    public void forgotPassword() throws Exception {
+        Map<String, Object> updateRequest = new HashMap<>();
+        updateRequest.put("email", ADMIN_MAIL);
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(updateRequest, loginAdminUserHeaders());
+
+        ResponseEntity<String> response = restTemplate.exchange("/user/forgotPassword", HttpMethod.POST, entity, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).contains("Check your mail for credentials");
+    }
+
     private HttpHeaders loginAdminUserHeaders() throws Exception {
         Map<String, String> loginRequest = Map.of("email", ADMIN_MAIL,
                 "password", ADMIN_PASSWORD);
