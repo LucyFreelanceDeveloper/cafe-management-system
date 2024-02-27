@@ -56,7 +56,7 @@ public class BillServiceImpl implements BillService {
             );
             BillEntity billEntity = BillMapper.INSTANCE.billDtoToBillEntity(billDtoPrepared);
             BillEntity billEntitySaved = billRepository.save(billEntity);
-            String absolutePath = Paths.get(System.getProperty("user.home"), pdfStoreRelativeLocation, billDto.getUuid() + ".pdf").toString();
+            String absolutePath = Paths.get(System.getProperty("user.home"), pdfStoreRelativeLocation, billDto.uuid() + ".pdf").toString();
             PdfUtils.generateAndSaveBillReport(billDtoPrepared, absolutePath);
             return new ResponseEntity<String>(billEntitySaved.getId().toString(), HttpStatus.CREATED);
         } catch (Exception ex) {
@@ -93,7 +93,7 @@ public class BillServiceImpl implements BillService {
         try {
             if (billRepository.existsById(id)) {
                 BillDto billDto = BillMapper.INSTANCE.billEntityToBillDto(billRepository.findById(id).get());
-                String absolutePath = Paths.get(System.getProperty("user.home"), pdfStoreRelativeLocation, billDto.getUuid() + ".pdf").toString();
+                String absolutePath = Paths.get(System.getProperty("user.home"), pdfStoreRelativeLocation, billDto.uuid() + ".pdf").toString();
                 new File(absolutePath).delete();
                 billRepository.deleteById(id);
                 return CafeUtils.getResponseEntity("Bill Delete Successfully", HttpStatus.OK);
@@ -111,7 +111,7 @@ public class BillServiceImpl implements BillService {
         try {
             if (billRepository.existsById(id)) {
                 BillDto billDto = BillMapper.INSTANCE.billEntityToBillDto(billRepository.findById(id).get());
-                String absolutePath = Paths.get(System.getProperty("user.home"), pdfStoreRelativeLocation, billDto.getUuid() + ".pdf").toString();
+                String absolutePath = Paths.get(System.getProperty("user.home"), pdfStoreRelativeLocation, billDto.uuid() + ".pdf").toString();
                 byte[] bytes = Files.readAllBytes(Paths.get(absolutePath));
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.APPLICATION_PDF);
