@@ -10,6 +10,7 @@ import com.example.cafe.service.BillService;
 import com.example.cafe.util.CafeUtils;
 import com.example.cafe.util.PdfUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,7 +32,8 @@ public class BillServiceImpl implements BillService {
 
     private final JwtFilter jwtFilter;
 
-    public static final String PDF_STORE_LOCATION = "";
+    @Value("${pdf.store.relative-location}")
+    private String pdfStoreRelativeLocation;
 
     public BillServiceImpl(BillRepository billRepository, JwtFilter jwtFilter) {
         this.billRepository = billRepository;
@@ -45,7 +47,8 @@ public class BillServiceImpl implements BillService {
             billDto.setCreatedBy(jwtFilter.getCurrentUser());
             BillEntity billEntity = BillMapper.INSTANCE.billDtoToBillEntity(billDto);
             BillEntity billEntitySaved = billRepository.save(billEntity);
-            PdfUtils.generateAndSaveBillReport(billDto, PDF_STORE_LOCATION);
+            String absolutePath = Paths.get(System.getProperty("user.home"), pdfStoreRelativeLocation, billDto.getUuid() + ".pdf").toString();
+            PdfUtils.generateAndSaveBillReport(billDto, absolutePath);
             return new ResponseEntity<String>(billEntitySaved.getId().toString(), HttpStatus.CREATED);
         } catch (Exception ex) {
             log.error("Failed call generateReport", ex);
@@ -81,7 +84,8 @@ public class BillServiceImpl implements BillService {
         try {
             if (billRepository.existsById(id)) {
                 BillDto billDto = BillMapper.INSTANCE.billEntityToBillDto(billRepository.findById(id).get());
-                new File(PDF_STORE_LOCATION + billDto.getUuid() + ".pdf").delete();
+                String absolutePath = Paths.get(System.getProperty("user.home"), pdfStoreRelativeLocation, billDto.getUuid() + ".pdf").toString();
+                new File(absolutePath).delete();
                 billRepository.deleteById(id);
                 return CafeUtils.getResponseEntity("Bill Delete Successfully", HttpStatus.OK);
             } else {
@@ -98,7 +102,8 @@ public class BillServiceImpl implements BillService {
         try {
             if (billRepository.existsById(id)) {
                 BillDto billDto = BillMapper.INSTANCE.billEntityToBillDto(billRepository.findById(id).get());
-                byte[] bytes = Files.readAllBytes(Paths.get(PDF_STORE_LOCATION + billDto.getUuid() + ".pdf"));
+                String absolutePath = Paths.get(System.getProperty("user.home"), pdfStoreRelativeLocation, billDto.getUuid() + ".pdf").toString();
+                byte[] bytes = Files.readAllBytes(Paths.get(absolutePath));
 
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.APPLICATION_PDF);
