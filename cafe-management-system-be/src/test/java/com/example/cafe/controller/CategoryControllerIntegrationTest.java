@@ -91,8 +91,8 @@ class CategoryControllerIntegrationTest {
 
         if (!responseBody.isEmpty()) {
             CategoryDto firstCategory = responseBody.get(0);
-            Integer firstCategoryId = firstCategory.getId();
-            String firstCategoryName = firstCategory.getName();
+            Integer firstCategoryId = firstCategory.id();
+            String firstCategoryName = firstCategory.name();
 
             assertThat(responseBody.size()).isEqualTo(10);
             assertThat(firstCategoryId).isEqualTo(1);

@@ -87,11 +87,11 @@ class ProductControllerIntegrationTest {
 
         if (!products.isEmpty()) {
             ProductDto firstProduct = products.get(0);
-            Integer firstProductCategoryId = firstProduct.getCategoryId();
-            Integer firstProductId = firstProduct.getId();
-            Integer firstProductPrice = firstProduct.getPrice();
-            String firstProductCategoryName = firstProduct.getCategoryName();
-            String firstProductName = firstProduct.getName();
+            Integer firstProductCategoryId = firstProduct.categoryId();
+            Integer firstProductId = firstProduct.id();
+            Integer firstProductPrice = firstProduct.price();
+            String firstProductCategoryName = firstProduct.categoryName();
+            String firstProductName = firstProduct.name();
 
             assertThat(products.size()).isEqualTo(10);
             assertThat(firstProductCategoryId).isEqualTo(1);
