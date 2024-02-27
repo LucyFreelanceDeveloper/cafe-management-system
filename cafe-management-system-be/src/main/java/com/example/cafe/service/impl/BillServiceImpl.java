@@ -43,12 +43,21 @@ public class BillServiceImpl implements BillService {
     @Override
     public ResponseEntity<String> generateReport(BillDto billDto) {
         try {
-            billDto.setUuid(CafeUtils.getUUID());
-            billDto.setCreatedBy(jwtFilter.getCurrentUser());
-            BillEntity billEntity = BillMapper.INSTANCE.billDtoToBillEntity(billDto);
+            BillDto billDtoPrepared = new BillDto(
+                    billDto.id(),
+                    CafeUtils.getUUID(),
+                    billDto.name(),
+                    billDto.email(),
+                    billDto.contactNumber(),
+                    billDto.paymentMethod(),
+                    billDto.total(),
+                    billDto.productDetail(),
+                    jwtFilter.getCurrentUser()
+            );
+            BillEntity billEntity = BillMapper.INSTANCE.billDtoToBillEntity(billDtoPrepared);
             BillEntity billEntitySaved = billRepository.save(billEntity);
             String absolutePath = Paths.get(System.getProperty("user.home"), pdfStoreRelativeLocation, billDto.getUuid() + ".pdf").toString();
-            PdfUtils.generateAndSaveBillReport(billDto, absolutePath);
+            PdfUtils.generateAndSaveBillReport(billDtoPrepared, absolutePath);
             return new ResponseEntity<String>(billEntitySaved.getId().toString(), HttpStatus.CREATED);
         } catch (Exception ex) {
             log.error("Failed call generateReport", ex);
@@ -104,7 +113,6 @@ public class BillServiceImpl implements BillService {
                 BillDto billDto = BillMapper.INSTANCE.billEntityToBillDto(billRepository.findById(id).get());
                 String absolutePath = Paths.get(System.getProperty("user.home"), pdfStoreRelativeLocation, billDto.getUuid() + ".pdf").toString();
                 byte[] bytes = Files.readAllBytes(Paths.get(absolutePath));
-
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.APPLICATION_PDF);
 
