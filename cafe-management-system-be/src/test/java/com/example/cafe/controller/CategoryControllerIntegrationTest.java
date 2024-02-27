@@ -1,18 +1,22 @@
 package com.example.cafe.controller;
 
 import com.example.cafe.CaffeManagementSystemApplication;
+import com.example.cafe.model.dto.CategoryDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @SpringBootTest(classes = {CaffeManagementSystemApplication.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -29,43 +33,116 @@ class CategoryControllerIntegrationTest {
 
     @Test
     @DirtiesContext
-    void create() throws Exception {
+    void shouldCreateCategory() throws Exception {
         Map<String, Object> createRequest = new HashMap<>();
-        createRequest.put("name", "Pizza1");
+        createRequest.put("name", "Pizza americano");
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(createRequest, loginAdminUserHeaders());
 
         ResponseEntity<String> response = restTemplate.postForEntity("/categories", entity, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        String responseBody = response.getBody();
+        assertThat(responseBody).isNotNull();
+        assertThat(responseBody).isEqualTo("{\"message\":\"Category Added Successfully: [id:11]\"}");
     }
 
     @Test
-    void findAll() throws Exception {
+    @DirtiesContext
+    void shouldReturn400WhenCreateCategory() throws Exception {
+        Map<String, Object> createRequest = new HashMap<>();
+        createRequest.put("id", 1);
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(createRequest, loginAdminUserHeaders());
+
+        ResponseEntity<String> response = restTemplate.postForEntity("/categories", entity, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+        String responseBody = response.getBody();
+        assertThat(responseBody).isNotNull();
+        assertTrue(responseBody.contains("Name cannot be null"));
+    }
+
+    @Test
+    @DirtiesContext
+    void shouldReturn400AndCheckIfNameIsStringWhenCreateCategory() throws Exception {
+        Map<String, Object> createRequest = new HashMap<>();
+        createRequest.put("name", 1);
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(createRequest, loginAdminUserHeaders());
+
+        ResponseEntity<String> response = restTemplate.postForEntity("/categories", entity, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+        String responseBody = response.getBody();
+        assertThat(responseBody).isNotNull();
+        assertTrue(responseBody.contains("Category name must not be empty and must not contain numbers"));
+    }
+
+    @Test
+    void shouldFindAllCategories() throws Exception {
         HttpEntity<String> entity = new HttpEntity<>("application/json", loginAdminUserHeaders());
 
-        ResponseEntity<String> response = restTemplate.exchange("/categories", HttpMethod.GET, entity, String.class);
+        ResponseEntity<List<CategoryDto>> response = restTemplate.exchange("/categories", HttpMethod.GET, entity, new ParameterizedTypeReference<List<CategoryDto>>(){});
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        List<CategoryDto> responseBody = response.getBody();
+        assertThat(responseBody).isNotNull();
+
+        if (!responseBody.isEmpty()) {
+            CategoryDto firstCategory = responseBody.get(0);
+            Integer firstCategoryId = firstCategory.getId();
+            String firstCategoryName = firstCategory.getName();
+
+            assertThat(responseBody.size()).isEqualTo(10);
+            assertThat(firstCategoryId).isEqualTo(1);
+            assertThat(firstCategoryName).isEqualTo("Cafe");
+        }
     }
 
     @Test
     @DirtiesContext
-    void update() throws Exception {
+    void shouldUpdateCategory() throws Exception {
         Map<String, Object> createRequest = new HashMap<>();
-        createRequest.put("categoryId", "1");
+        createRequest.put("id", "1");
         createRequest.put("name", "Pizza1");
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(createRequest, loginAdminUserHeaders());
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/categories", entity, String.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        ResponseEntity<String> response = restTemplate.exchange("/categories", HttpMethod.PUT, entity, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        String responseBody = response.getBody();
+        assertThat(responseBody).isNotNull();
+        assertTrue(responseBody.contains("Category Updated Successfully"));
     }
 
     @Test
     @DirtiesContext
-    void delete() throws Exception {
+    void shouldReturn400WhenUpdateCategory() throws Exception {
+        Map<String, Object> createRequest = new HashMap<>();
+        createRequest.put("id", "25");
+        createRequest.put("name", "Pizza1");
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(createRequest, loginAdminUserHeaders());
+
+        ResponseEntity<String> response = restTemplate.exchange("/categories", HttpMethod.PUT, entity, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+        String responseBody = response.getBody();
+        assertThat(responseBody).isNotNull();
+        assertTrue(responseBody.contains("Category id does not exist"));
+    }
+
+    @Test
+    @DirtiesContext
+    void shouldDeleteCategory() throws Exception {
         HttpEntity<String> entity = new HttpEntity<>("application/json", loginAdminUserHeaders());
 
         ResponseEntity<String> response = restTemplate.exchange("/categories/1", HttpMethod.DELETE, entity, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        String responseBody = response.getBody();
+        assertThat(responseBody).isNotNull();
+        assertTrue(responseBody.contains("Category Delete Successfully"));
     }
 
     private HttpHeaders loginAdminUserHeaders() throws Exception {
