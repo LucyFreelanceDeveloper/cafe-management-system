@@ -86,7 +86,7 @@ class ProductControllerIntegrationTest {
         assertThat(products).isNotNull();
 
         if (!products.isEmpty()) {
-            ProductDto firstProduct = products.get(0);
+            ProductDto firstProduct = products.stream().filter(p->p.id().equals(2)).findFirst().orElse(null);
             Integer firstProductCategoryId = firstProduct.categoryId();
             Integer firstProductId = firstProduct.id();
             Integer firstProductPrice = firstProduct.price();
