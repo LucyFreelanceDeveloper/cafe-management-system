@@ -26,7 +26,7 @@ public class CategoryEntity extends BasicIdEntity implements Serializable{
     private String name;
 
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<ProductEntity> products;

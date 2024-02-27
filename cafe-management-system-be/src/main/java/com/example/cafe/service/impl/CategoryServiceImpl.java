@@ -37,9 +37,13 @@ public class CategoryServiceImpl implements CategoryService {
     public ResponseEntity<String> create(CategoryDto categoryDto) {
         try {
             if (jwtFilter.isAdmin()) {
-                CategoryEntity categoryEntity = CategoryMapper.INSTANCE.categoryDtoToCategoryEntity(categoryDto);
-                categoryEntity = categoryRepository.save(categoryEntity);
-                return CafeUtils.getResponseEntity(String.format("Category Added Successfully: [id:%s]", categoryEntity.getId()), HttpStatus.CREATED);
+                if (categoryDto.name() != null && !categoryDto.name().isEmpty() && !categoryDto.name().matches(".*\\d.*")) {
+                    CategoryEntity categoryEntity = CategoryMapper.INSTANCE.categoryDtoToCategoryEntity(categoryDto);
+                    categoryEntity = categoryRepository.save(categoryEntity);
+                    return CafeUtils.getResponseEntity(String.format("Category Added Successfully: [id:%s]", categoryEntity.getId()), HttpStatus.CREATED);
+                } else {
+                    return CafeUtils.getResponseEntity("Category name must not be empty and must not contain numbers", HttpStatus.BAD_REQUEST);
+                }
             } else {
                 return CafeUtils.getResponseEntity(CafeConstants.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED);
             }
