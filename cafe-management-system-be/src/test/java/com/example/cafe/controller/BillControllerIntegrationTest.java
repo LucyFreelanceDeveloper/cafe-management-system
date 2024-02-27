@@ -64,7 +64,7 @@ class BillControllerIntegrationTest {
     void findPdf() throws Exception {
         HttpEntity<String> entity = new HttpEntity<>("application/json", loginAdminUserHeaders());
 
-        ResponseEntity<String> response = restTemplate.exchange("/bills/1/pdf", HttpMethod.GET, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange("/bills/2/pdf", HttpMethod.GET, entity, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
