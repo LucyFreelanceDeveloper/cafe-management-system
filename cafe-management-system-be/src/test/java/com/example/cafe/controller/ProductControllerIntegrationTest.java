@@ -1,18 +1,26 @@
 package com.example.cafe.controller;
 
 import com.example.cafe.CaffeManagementSystemApplication;
+import com.example.cafe.model.dto.ProductDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 
 @SpringBootTest(classes = {CaffeManagementSystemApplication.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ProductControllerIntegrationTest {
@@ -55,6 +63,43 @@ class ProductControllerIntegrationTest {
 
         ResponseEntity<String> response = restTemplate.exchange("/products/1", HttpMethod.GET, entity, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    void findByCategoryId() throws Exception {
+        HttpEntity<String> entity = new HttpEntity<>("application/json", loginAdminUserHeaders());
+
+        // Vytvoření query parametru pro categoryId
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("categoryId", "1"); // Nastavim categoryId na požadovanou hodnotu
+
+        // Vytvoření URL s query parametry
+        URI uri = UriComponentsBuilder.fromUriString("/products")
+                .queryParams(queryParams)
+                .build()
+                .toUri();
+
+        ResponseEntity<List<ProductDto>> response = restTemplate.exchange(uri, HttpMethod.GET, entity, new ParameterizedTypeReference<List<ProductDto>>(){});
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        List<ProductDto> products = response.getBody();
+        assertThat(products).isNotNull();
+
+        if (!products.isEmpty()) {
+            ProductDto firstProduct = products.get(0);
+            Integer firstProductCategoryId = firstProduct.getCategoryId();
+            Integer firstProductId = firstProduct.getId();
+            Integer firstProductPrice = firstProduct.getPrice();
+            String firstProductCategoryName = firstProduct.getCategoryName();
+            String firstProductName = firstProduct.getName();
+
+            assertThat(products.size()).isEqualTo(10);
+            assertThat(firstProductCategoryId).isEqualTo(1);
+            assertThat(firstProductId).isEqualTo(2);
+            assertThat(firstProductPrice).isEqualTo(4);
+            assertThat(firstProductCategoryName).isEqualTo("Cafe");
+            assertThat(firstProductName).isEqualTo("Cappuccino");
+        }
     }
 
     @Test
