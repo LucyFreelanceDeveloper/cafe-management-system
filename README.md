@@ -1,6 +1,6 @@
 # cafe-management-system
 A full stack web application for managing information about products, categories and orders in cafe restaurant.
-Application is build on three microservices: cafe-management-system-db, cafe-management-system-be and cafe-management-system-fe.
+Application is build on three layers architecture: cafe-management-system-db, cafe-management-system-be and cafe-management-system-fe.
 
 The application uses technology:
 * **Backend**: Java, Spring Boot, Hibernate, Maven, Lombok, MapStruct
